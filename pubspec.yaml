@@ -1,0 +1,25 @@
+name: another_flutter_devtool
+description: "An in-app devtool for Flutter with a draggable floating launcher and a full-screen devtool panel."
+version: 0.1.0
+homepage: https://github.com/B3K4682/another_flutter_devtool
+repository: https://github.com/B3K4682/another_flutter_devtool
+issue_tracker: https://github.com/B3K4682/another_flutter_devtool/issues
+
+environment:
+  sdk: ^3.13.4
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+
+# The following section is specific to Flutter packages.
+flutter:
+
+  # ? Add assets here
