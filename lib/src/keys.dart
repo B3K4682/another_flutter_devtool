@@ -3,6 +3,20 @@ import 'package:flutter/widgets.dart';
 /// Keys for locating devtool widgets in tests.
 abstract final class DevtoolKeys {
   static const launcher = ValueKey('another_flutter_devtool.launcher');
+  static const versionBadge = ValueKey('another_flutter_devtool.version_badge');
   static const panel = ValueKey('another_flutter_devtool.panel');
   static const closeButton = ValueKey('another_flutter_devtool.close_button');
+  static const infoModal = ValueKey('another_flutter_devtool.info_modal');
+  static const infoModalCloseButton = ValueKey('another_flutter_devtool.info_modal_close_button');
+
+  static ValueKey<String> sectionCard(String sectionId) =>
+      ValueKey('another_flutter_devtool.section_card.$sectionId');
+
+  static ValueKey<String> sectionPage(String sectionId) =>
+      ValueKey('another_flutter_devtool.section_page.$sectionId');
+
+  static ValueKey<String> toolCard(String toolId) => ValueKey('another_flutter_devtool.tool_card.$toolId');
+
+  static ValueKey<String> toolInfoButton(String toolId) =>
+      ValueKey('another_flutter_devtool.tool_info_button.$toolId');
 }

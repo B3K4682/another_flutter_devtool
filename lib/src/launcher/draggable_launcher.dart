@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../keys.dart';
+import '../theme/devtool_theme.dart';
 
 /// A small floating button that can be dragged anywhere inside the safe area.
 class DraggableLauncher extends StatefulWidget {
@@ -10,6 +11,7 @@ class DraggableLauncher extends StatefulWidget {
     required this.offset,
     required this.onMoved,
     required this.onTap,
+    this.versionLabel,
   });
 
   static const double size = 36;
@@ -20,6 +22,9 @@ class DraggableLauncher extends StatefulWidget {
   final Offset? offset;
   final ValueChanged<Offset> onMoved;
   final VoidCallback onTap;
+
+  /// Shown below the button when the App Information toggle is on.
+  final String? versionLabel;
 
   @override
   State<DraggableLauncher> createState() => _DraggableLauncherState();
@@ -40,6 +45,7 @@ class _DraggableLauncherState extends State<DraggableLauncher> {
           ),
       bounds,
     );
+    final versionLabel = widget.versionLabel;
 
     return Positioned(
       left: position.dx,
@@ -55,15 +61,33 @@ class _DraggableLauncherState extends State<DraggableLauncher> {
         onPanUpdate: (details) => widget.onMoved(
           _clamp(_dragStartPosition + details.globalPosition - _dragStartPointer, bounds),
         ),
-        child: Container(
+        child: SizedBox(
           width: DraggableLauncher.size,
           height: DraggableLauncher.size,
-          decoration: BoxDecoration(
-            color: const Color(0xFF6366F1),
-            borderRadius: BorderRadius.circular(DraggableLauncher.borderRadius),
-            boxShadow: const [BoxShadow(color: Color(0x40000000), blurRadius: 4, offset: Offset(0, 2))],
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                width: DraggableLauncher.size,
+                height: DraggableLauncher.size,
+                decoration: BoxDecoration(
+                  color: DevtoolColors.primary,
+                  borderRadius: BorderRadius.circular(DraggableLauncher.borderRadius),
+                  boxShadow: const [BoxShadow(color: Color(0x40000000), blurRadius: 4, offset: Offset(0, 2))],
+                ),
+                child: const Icon(Icons.code_rounded, size: 20, color: Colors.white),
+              ),
+              if (versionLabel != null)
+                Positioned(
+                  top: DraggableLauncher.size + 4,
+                  left: DraggableLauncher.size / 2,
+                  child: FractionalTranslation(
+                    translation: const Offset(-0.5, 0),
+                    child: _VersionBadge(label: versionLabel),
+                  ),
+                ),
+            ],
           ),
-          child: const Icon(Icons.code_rounded, size: 20, color: Colors.white),
         ),
       ),
     );
@@ -83,4 +107,35 @@ class _DraggableLauncherState extends State<DraggableLauncher> {
         value.dx.clamp(bounds.left, bounds.right),
         value.dy.clamp(bounds.top, bounds.bottom),
       );
+}
+
+class _VersionBadge extends StatelessWidget {
+  const _VersionBadge({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      key: DevtoolKeys.versionBadge,
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+      decoration: BoxDecoration(
+        color: DevtoolColors.surface,
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: DevtoolColors.border),
+      ),
+      child: Text(
+        label,
+        maxLines: 1,
+        softWrap: false,
+        style: const TextStyle(
+          fontFamily: DevtoolTheme.fontFamily,
+          fontSize: 10,
+          height: 1.2,
+          fontWeight: FontWeight.w500,
+          color: DevtoolColors.textSecondary,
+        ),
+      ),
+    );
+  }
 }

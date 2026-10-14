@@ -1,5 +1,34 @@
 # Changelog
 
+## 0.2.0
+
+Adds the tool system and the first built-in tool.
+
+### Added
+
+* Sections and tools:
+  * `DevtoolSection` for the cards on the devtool home screen, laid out two per row.
+  * `DevtoolTool` as the base class for tool cards; each tool declares the `section` it belongs to.
+  * `DevtoolConfig.sections` to pick which sections are shown, defaulting to `[GeneralSection()]`.
+  * `DevtoolTools` registry to add app-defined tools: `register`, `registerAll`, `unregister`, `clear`. A registered tool whose id matches a built-in replaces it.
+  * `GeneralSection`, which ships with `AppInfoTool` and accepts `appInfo: null` to hide it.
+* `AppInfoTool` in the General section, showing app version and build number, device model, OS version, current flavor and app startup time.
+  * `AppInfoSource` with the default `PlatformAppInfoSource` (`package_info_plus`, `device_info_plus`) and `StaticAppInfoSource` for tests or custom values.
+  * `AppFlavor` detection (Debug, Profile, Release) with semantic colors, overridable via `AppInfoTool(flavor: ...)`.
+  * `AnotherFlutterDevtool.markStartup()` and `DevtoolStartupTracker`, which measure the time to the first rasterized frame.
+  * Toggle to show the app version below the launcher button, persisted with `shared_preferences`.
+* Version badge under the launcher button, driven by that toggle.
+* Design system: `DevtoolColors`, `DevtoolSpacing` and `DevtoolTheme.dark()`, with the Inter font bundled.
+* Reusable widgets for tool authors: `DevtoolCard` (leading icon, title and an info button), `showDevtoolInfoModal`, `DevtoolInfoRow` and `DevtoolSwitchRow`.
+* `DevtoolController` for shared state and persisted settings, exposed to tools and the launcher through `DevtoolScope`.
+* `DevtoolStorage` with `SharedPreferencesDevtoolStorage` and `InMemoryDevtoolStorage`, overridable via `DevtoolConfig.storage`.
+* More `DevtoolKeys`: `versionBadge`, `infoModal`, `infoModalCloseButton`, `sectionCard`, `sectionPage`, `toolCard` and `toolInfoButton`.
+
+### Changed
+
+* The devtool panel now opens on a section grid instead of an empty screen. Section pages are pushed routes, so the system back button returns to the grid and only closes the panel from the home screen.
+* The panel uses `DevtoolTheme.dark()` instead of `ThemeData.dark()`.
+
 ## 0.1.0
 
 Initial release.
