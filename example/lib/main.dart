@@ -1,6 +1,8 @@
 import 'package:another_flutter_devtool/another_flutter_devtool.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'my_custom_tool.dart';
 
@@ -47,6 +49,22 @@ class CounterPage extends StatefulWidget {
 
 class _CounterPageState extends State<CounterPage> {
   int _count = 0;
+  String _lastResult = '';
+
+  Future<void> _fetchWithHttp() =>
+      _run(() async => (await http.get(Uri.parse('https://jsonplaceholder.typicode.com/posts'))).statusCode);
+
+  Future<void> _fetchWithDio() =>
+      _run(() async => (await Dio().get<String>('https://httpbin.org/bytes/20480')).statusCode ?? 0);
+
+  Future<void> _run(Future<int> Function() request) async {
+    try {
+      final status = await request();
+      if (mounted) setState(() => _lastResult = 'Status $status');
+    } catch (error) {
+      if (mounted) setState(() => _lastResult = 'Failed: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +83,16 @@ class _CounterPageState extends State<CounterPage> {
               key: const Key('counter_text'),
               style: Theme.of(context).textTheme.headlineMedium,
             ),
+            const SizedBox(height: 24),
+            Wrap(
+              spacing: 12,
+              children: [
+                OutlinedButton(onPressed: _fetchWithHttp, child: const Text('Fetch with http')),
+                OutlinedButton(onPressed: _fetchWithDio, child: const Text('Fetch with Dio')),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(_lastResult),
           ],
         ),
       ),

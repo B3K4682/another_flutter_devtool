@@ -2,13 +2,14 @@
 
 An in-app devtool for Flutter. Wrap your app, and a small draggable launcher button appears on top of it. Tap it to open a full-screen devtool panel without leaving the app.
 
-> **Early stage:** 0.2.0 ships the launcher, the panel and the App Information tool. More built-in tools are coming in future releases.
+> **Early stage:** 0.3.0 ships the launcher, the panel, and the App Information and Internet Data Usage tools. More built-in tools are coming in future releases.
 
 ## Features
 
 - Floating launcher button that can be dragged anywhere inside the safe area, with an optional app version badge.
 - Full-screen panel that closes with the close button or the system back button.
 - App Information tool: app version and build number, device model, OS version, current flavor and startup time.
+- Internet Data Usage tool: data received, sent and total, request count and top hosts since launch. Works with Dio and `http` with no setup.
 - Extensible: write your own section and tool, and it shows up alongside the built-in ones.
 - Fully isolated from your app: the panel has its own `MaterialApp` and theme, and your app keeps working underneath.
 - Turned off by default, so it is easy to keep out of release builds.
@@ -22,7 +23,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.2.0
+  another_flutter_devtool: ^0.3.0
 ```
 
 
@@ -49,7 +50,7 @@ void main() {
 }
 ```
 
-That already gives you the General section with the App Information card in it.
+That already gives you the General section with the App Information and Internet Data Usage cards in it.
 
 ### Configuration
 
@@ -70,8 +71,8 @@ const DevtoolConfig(
 
 `sections` holds the cards shown on the home screen; it never holds tools. A tool
 declares the section it belongs to and shows up there on its own. `GeneralSection`
-ships with `AppInfoTool`, so you get app version, device, OS, flavor and startup
-time without any wiring.
+ships with `AppInfoTool` and `NetworkUsageTool`, so you get app version, device, OS,
+flavor, startup time and network usage without any wiring.
 
 To add your own, create a section, point a tool at it, and register the tool once:
 

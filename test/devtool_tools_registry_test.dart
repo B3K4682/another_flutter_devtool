@@ -17,14 +17,17 @@ void main() {
     expect(controller.sections.map((section) => section.id), ['custom', 'general']);
   });
 
-  test('General ships with the app info tool and nothing else', () {
+  test('General ships with the app info and network usage tools', () {
     final controller = controllerWith(const [GeneralSection()]);
 
-    expect(controller.toolsOf(const GeneralSection()).map((tool) => tool.id), [AppInfoTool.toolId]);
+    expect(
+      controller.toolsOf(const GeneralSection()).map((tool) => tool.id),
+      [AppInfoTool.toolId, NetworkUsageTool.toolId],
+    );
   });
 
-  test('General can be configured without the app info tool', () {
-    final controller = controllerWith(const [GeneralSection(appInfo: null)]);
+  test('General can be configured without built-in tools', () {
+    final controller = controllerWith(const [GeneralSection(appInfo: null, networkUsage: null)]);
 
     expect(controller.toolsOf(const GeneralSection()), isEmpty);
     expect(controller.tools, isEmpty);
@@ -35,7 +38,10 @@ void main() {
     final controller = controllerWith(const [GeneralSection(), testCustomSection]);
 
     expect(controller.toolsOf(testCustomSection).map((tool) => tool.id), ['test_custom_tool']);
-    expect(controller.tools.map((tool) => tool.id), [AppInfoTool.toolId, 'test_custom_tool']);
+    expect(
+      controller.tools.map((tool) => tool.id),
+      [AppInfoTool.toolId, NetworkUsageTool.toolId, 'test_custom_tool'],
+    );
   });
 
   test('a registered tool replaces a built-in with the same id', () {
@@ -43,8 +49,8 @@ void main() {
     final controller = controllerWith(const [GeneralSection()]);
 
     final tools = controller.toolsOf(const GeneralSection());
-    expect(tools, hasLength(1));
-    expect((tools.single as AppInfoTool).flavor, 'Staging');
+    expect(tools, hasLength(2));
+    expect(tools.whereType<AppInfoTool>().single.flavor, 'Staging');
   });
 
   test('registering the same id twice keeps the last tool', () {
@@ -70,7 +76,7 @@ void main() {
     DevtoolTools.register(const TestCustomTool());
     final controller = controllerWith(const [GeneralSection()]);
 
-    expect(controller.tools.map((tool) => tool.id), [AppInfoTool.toolId]);
+    expect(controller.tools.map((tool) => tool.id), [AppInfoTool.toolId, NetworkUsageTool.toolId]);
   });
 
   test('sections compare by id', () {

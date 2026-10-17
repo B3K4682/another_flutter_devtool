@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.3.0
+
+Adds the Internet Data Usage tool.
+
+### Added
+
+* `NetworkUsageTool` in the General section, counting HTTP traffic since launch:
+  * Data received, data sent and the total, formatted as B, KB, MB or GB.
+  * Number of requests made.
+  * Top hosts by data received (5 by default, configurable via `topHostCount`).
+  * Reset button to start counting from zero.
+* Works with Dio, the `http` package and anything else built on `dart:io`'s `HttpClient`, with no setup in the app. Traffic is captured through a global `HttpOverrides` that chains any overrides the app already installed.
+* `NetworkUsageTracker` (`NetworkUsageTracker.instance` by default) with `stats`, `reset()` and `record*` methods; pass your own via `NetworkUsageTool(tracker: ...)`.
+* `NetworkUsageStats` and `HostUsage` snapshots, plus the `formatBytes` helper.
+* `DevtoolKeys.networkUsageResetButton`.
+* Example app buttons that fetch with `http` and Dio to demo the tool.
+
+### Changed
+
+* `GeneralSection` now ships with `AppInfoTool` and `NetworkUsageTool`. Pass `networkUsage: null` to hide the new card.
+
+### Known limitations
+
+* Not available on web, where the card says tracking is unavailable.
+* Native clients that bypass `HttpClient` (`cupertino_http`, `native_dio_adapter`) are not counted.
+* Header sizes are estimated, and gzip responses are counted after decompression.
+
 ## 0.2.0
 
 Adds the tool system and the first built-in tool.

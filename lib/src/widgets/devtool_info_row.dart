@@ -27,15 +27,13 @@ class DevtoolInfoRow extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: Text(label, style: theme.textTheme.bodySmall)),
-          const SizedBox(width: DevtoolSpacing.gap),
-          Flexible(
-            child: SelectableText(
-              value,
-              textAlign: TextAlign.right,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: valueColor ?? DevtoolColors.textPrimary,
-                fontWeight: FontWeight.w500,
-              ),
+          const Spacer(),
+          SelectableText(
+            value,
+            textAlign: TextAlign.right,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: valueColor ?? DevtoolColors.textPrimary,
+              fontWeight: FontWeight.w500,
             ),
           ),
         ],
