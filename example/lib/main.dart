@@ -6,6 +6,9 @@ import 'package:http/http.dart' as http;
 
 import 'my_custom_tool.dart';
 
+// Navigation key (works with all routers)
+final navigatorKey = GlobalKey<NavigatorState>();
+
 void main() {
   // For tracking startup time.
   AnotherFlutterDevtool.markStartup();
@@ -15,10 +18,16 @@ void main() {
 
   runApp(
     AnotherFlutterDevtool(
-      config: const DevtoolConfig(
+      config: DevtoolConfig(
         // Can be kDebugMode or your own condition.
         enabled: kDebugMode,
-        sections: [GeneralSection(), playgroundSection],
+        sections: [
+          GeneralSection(
+            // This configuration is required to navigate to a route.
+            configuration: ConfigurationTool(onNavigate: (route) => navigatorKey.currentState?.pushNamed(route)),
+          ),
+          playgroundSection,
+        ],
       ),
       child: const ExampleApp(),
     ),
@@ -32,10 +41,29 @@ class ExampleApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Devtool Example',
+      navigatorKey: navigatorKey,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
       ),
       home: const CounterPage(),
+      routes: {
+        '/example': (_) => const PlaceholderPage(title: '/example'),
+        '/test': (_) => const PlaceholderPage(title: '/test'),
+      },
+    );
+  }
+}
+
+class PlaceholderPage extends StatelessWidget {
+  const PlaceholderPage({super.key, required this.title});
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(title)),
+      body: Center(child: Text('You navigated to $title')),
     );
   }
 }

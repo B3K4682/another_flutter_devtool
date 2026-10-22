@@ -33,7 +33,6 @@ class AnotherFlutterDevtool extends StatefulWidget {
 class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
   late final bool _launcherVisible = widget.config.launcher.initiallyVisible;
   late final DevtoolController _controller;
-  bool _panelOpen = false;
   Offset? _launcherOffset;
 
   @override
@@ -55,15 +54,9 @@ class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
     super.dispose();
   }
 
-  void _openPanel() => setState(() => _panelOpen = true);
-
-  void _closePanel() => setState(() => _panelOpen = false);
-
   @override
   Widget build(BuildContext context) {
     if (!widget.config.enabled) return widget.child;
-
-    final showLauncher = widget.config.launcher.enabled && _launcherVisible && !_panelOpen;
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -71,28 +64,32 @@ class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
         view: View.of(context),
         child: DevtoolScope(
           controller: _controller,
-          child: Stack(
-            children: [
-              Positioned.fill(child: widget.child),
-              if (_panelOpen)
-                Positioned.fill(
-                  child: MaterialApp(
-                    debugShowCheckedModeBanner: false,
-                    theme: DevtoolTheme.dark(),
-                    home: DevtoolPanel(onClose: _closePanel),
-                  ),
-                ),
-              if (showLauncher)
-                ListenableBuilder(
-                  listenable: _controller,
-                  builder: (context, _) => DraggableLauncher(
-                    offset: _launcherOffset,
-                    onMoved: (offset) => setState(() => _launcherOffset = offset),
-                    onTap: _openPanel,
-                    versionLabel: _versionLabel,
-                  ),
-                ),
-            ],
+          child: ListenableBuilder(
+            listenable: _controller,
+            builder: (context, _) {
+              final panelOpen = _controller.isPanelOpen;
+              final showLauncher = widget.config.launcher.enabled && _launcherVisible && !panelOpen;
+              return Stack(
+                children: [
+                  Positioned.fill(child: widget.child),
+                  if (panelOpen)
+                    Positioned.fill(
+                      child: MaterialApp(
+                        debugShowCheckedModeBanner: false,
+                        theme: DevtoolTheme.dark(),
+                        home: DevtoolPanel(onClose: _controller.closePanel),
+                      ),
+                    ),
+                  if (showLauncher)
+                    DraggableLauncher(
+                      offset: _launcherOffset,
+                      onMoved: (offset) => setState(() => _launcherOffset = offset),
+                      onTap: _controller.openPanel,
+                      versionLabel: _versionLabel,
+                    ),
+                ],
+              );
+            },
           ),
         ),
       ),

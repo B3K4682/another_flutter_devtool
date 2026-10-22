@@ -1,4 +1,5 @@
 import 'package:another_flutter_devtool/another_flutter_devtool.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'helpers/devtool_test_harness.dart';
@@ -65,6 +66,11 @@ void main() {
     await openSection(tester, GeneralSection.sectionId);
 
     expect(appInfoCard, findsOneWidget);
+    await tester.scrollUntilVisible(
+      customToolCard,
+      100,
+      scrollable: find.descendant(of: generalPage, matching: find.byType(Scrollable)).first,
+    );
     expect(customToolCard, findsOneWidget);
   });
 

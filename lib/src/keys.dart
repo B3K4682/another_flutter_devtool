@@ -9,6 +9,8 @@ abstract final class DevtoolKeys {
   static const infoModal = ValueKey('another_flutter_devtool.info_modal');
   static const infoModalCloseButton = ValueKey('another_flutter_devtool.info_modal_close_button');
   static const networkUsageResetButton = ValueKey('another_flutter_devtool.network_usage_reset_button');
+  static const configurationRouteField = ValueKey('another_flutter_devtool.configuration_route_field');
+  static const configurationGoButton = ValueKey('another_flutter_devtool.configuration_go_button');
 
   static ValueKey<String> sectionCard(String sectionId) =>
       ValueKey('another_flutter_devtool.section_card.$sectionId');

@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.4.0
+
+Adds the Configuration tool with route navigation.
+
+### Added
+
+* `ConfigurationTool` in the General section, with a Navigation input: type a route like `/example` and press Go (or submit from the keyboard) to close the devtool and open that route.
+  * Takes an `onNavigate` callback, so it works with `Navigator`, go_router, auto_route or any other router.
+  * Trims the input, ignores empty input and adds a leading `/` when it is missing.
+  * Without `onNavigate`, the input is disabled and the card explains how to enable it.
+* `DevtoolController.isPanelOpen`, `openPanel()` and `closePanel()`, so tools can open or close the devtool panel.
+* `DevtoolKeys.configurationRouteField` and `DevtoolKeys.configurationGoButton`.
+* Example app routes `/example` and `/test` to demo the tool.
+
+### Changed
+
+* `GeneralSection` now ships with `AppInfoTool`, `NetworkUsageTool` and `ConfigurationTool`. Pass `configuration: null` to hide the new card.
+* Whether the panel is open now lives in `DevtoolController` instead of the `AnotherFlutterDevtool` widget.
+
 ## 0.3.0
 
 Adds the Internet Data Usage tool.

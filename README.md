@@ -2,7 +2,7 @@
 
 An in-app devtool for Flutter. Wrap your app, and a small draggable launcher button appears on top of it. Tap it to open a full-screen devtool panel without leaving the app.
 
-> **Early stage:** 0.3.0 ships the launcher, the panel, and the App Information and Internet Data Usage tools. More built-in tools are coming in future releases.
+> **Early stage:** 0.4.0 ships the launcher, the panel, and the App Information, Internet Data Usage and Configuration tools. More built-in tools are coming in future releases.
 
 ## Features
 
@@ -10,6 +10,7 @@ An in-app devtool for Flutter. Wrap your app, and a small draggable launcher but
 - Full-screen panel that closes with the close button or the system back button.
 - App Information tool: app version and build number, device model, OS version, current flavor and startup time.
 - Internet Data Usage tool: data received, sent and total, request count and top hosts since launch. Works with Dio and `http` with no setup.
+- Configuration tool: type a route like `/example` to close the devtool and jump straight to that screen. Works with any router.
 - Extensible: write your own section and tool, and it shows up alongside the built-in ones.
 - Fully isolated from your app: the panel has its own `MaterialApp` and theme, and your app keeps working underneath.
 - Turned off by default, so it is easy to keep out of release builds.
@@ -23,7 +24,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.3.0
+  another_flutter_devtool: ^0.4.0
 ```
 
 
@@ -50,7 +51,34 @@ void main() {
 }
 ```
 
-That already gives you the General section with the App Information and Internet Data Usage cards in it.
+That already gives you the General section with the App Information, Internet Data Usage and Configuration cards in it.
+
+### Navigation
+
+The Configuration card has a route input. Since the devtool panel runs in its own
+`MaterialApp`, tell it how to reach your app's router with `onNavigate`; the devtool
+closes and then calls it with the typed route:
+
+```dart
+final navigatorKey = GlobalKey<NavigatorState>();
+
+AnotherFlutterDevtool(
+  config: DevtoolConfig(
+    enabled: kDebugMode,
+    sections: [
+      GeneralSection(
+        configuration: ConfigurationTool(
+          onNavigate: (route) => navigatorKey.currentState?.pushNamed(route),
+        ),
+      ),
+    ],
+  ),
+  child: MaterialApp(navigatorKey: navigatorKey, routes: {...}),
+);
+```
+
+With go_router, use `onNavigate: (route) => router.go(route)` instead. Without
+`onNavigate`, the input stays disabled.
 
 ### Configuration
 
@@ -71,8 +99,8 @@ const DevtoolConfig(
 
 `sections` holds the cards shown on the home screen; it never holds tools. A tool
 declares the section it belongs to and shows up there on its own. `GeneralSection`
-ships with `AppInfoTool` and `NetworkUsageTool`, so you get app version, device, OS,
-flavor, startup time and network usage without any wiring.
+ships with `AppInfoTool`, `NetworkUsageTool` and `ConfigurationTool`, so you get app
+version, device, OS, flavor, startup time and network usage without any wiring.
 
 To add your own, create a section, point a tool at it, and register the tool once:
 
@@ -127,7 +155,8 @@ void main() {
 
 Registering a tool whose id matches a built-in replaces it, so
 `DevtoolTools.register(const AppInfoTool(flavor: 'Staging'))` customises the
-built-in card. `GeneralSection(appInfo: null)` hides it instead.
+built-in card. `GeneralSection(appInfo: null)` hides it instead, and the same works
+for `networkUsage` and `configuration`.
 
 ### Testing
 

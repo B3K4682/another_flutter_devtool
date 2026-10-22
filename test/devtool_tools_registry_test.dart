@@ -17,17 +17,19 @@ void main() {
     expect(controller.sections.map((section) => section.id), ['custom', 'general']);
   });
 
-  test('General ships with the app info and network usage tools', () {
+  test('General ships with the app info, network usage and configuration tools', () {
     final controller = controllerWith(const [GeneralSection()]);
 
     expect(
       controller.toolsOf(const GeneralSection()).map((tool) => tool.id),
-      [AppInfoTool.toolId, NetworkUsageTool.toolId],
+      [AppInfoTool.toolId, NetworkUsageTool.toolId, ConfigurationTool.toolId],
     );
   });
 
   test('General can be configured without built-in tools', () {
-    final controller = controllerWith(const [GeneralSection(appInfo: null, networkUsage: null)]);
+    final controller = controllerWith(
+      const [GeneralSection(appInfo: null, networkUsage: null, configuration: null)],
+    );
 
     expect(controller.toolsOf(const GeneralSection()), isEmpty);
     expect(controller.tools, isEmpty);
@@ -40,7 +42,7 @@ void main() {
     expect(controller.toolsOf(testCustomSection).map((tool) => tool.id), ['test_custom_tool']);
     expect(
       controller.tools.map((tool) => tool.id),
-      [AppInfoTool.toolId, NetworkUsageTool.toolId, 'test_custom_tool'],
+      [AppInfoTool.toolId, NetworkUsageTool.toolId, ConfigurationTool.toolId, 'test_custom_tool'],
     );
   });
 
@@ -49,7 +51,7 @@ void main() {
     final controller = controllerWith(const [GeneralSection()]);
 
     final tools = controller.toolsOf(const GeneralSection());
-    expect(tools, hasLength(2));
+    expect(tools, hasLength(3));
     expect(tools.whereType<AppInfoTool>().single.flavor, 'Staging');
   });
 
@@ -76,7 +78,10 @@ void main() {
     DevtoolTools.register(const TestCustomTool());
     final controller = controllerWith(const [GeneralSection()]);
 
-    expect(controller.tools.map((tool) => tool.id), [AppInfoTool.toolId, NetworkUsageTool.toolId]);
+    expect(
+      controller.tools.map((tool) => tool.id),
+      [AppInfoTool.toolId, NetworkUsageTool.toolId, ConfigurationTool.toolId],
+    );
   });
 
   test('sections compare by id', () {

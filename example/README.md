@@ -14,10 +14,24 @@ The devtool is wired up in `[lib/main.dart](lib/main.dart)` and only enabled in 
 
 ```dart
 AnotherFlutterDevtool(
-  config: const DevtoolConfig(enabled: kDebugMode),
+  config: DevtoolConfig(
+    enabled: kDebugMode,
+    sections: [
+      GeneralSection(
+        configuration: ConfigurationTool(onNavigate: (route) => navigatorKey.currentState?.pushNamed(route)),
+      ),
+      playgroundSection,
+    ],
+  ),
   child: const ExampleApp(),
 )
 ```
+
+Things to try:
+
+- **Fetch with http** and **Fetch with Dio** buttons generate traffic for the Internet Data Usage card.
+- In the Configuration card, type `/example` or `/test` and press Go to close the devtool and open that page.
+- The Playground section hosts the custom tools from `[lib/my_custom_tool.dart](lib/my_custom_tool.dart)`.
 
 ## Integration tests
 

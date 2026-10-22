@@ -15,6 +15,7 @@ export 'src/tools/app_info/app_info_source.dart';
 export 'src/tools/app_info/app_info_state.dart';
 export 'src/tools/app_info/app_info_tool.dart';
 export 'src/tools/app_info/startup_tracker.dart';
+export 'src/tools/configuration/configuration_tool.dart';
 export 'src/tools/network_usage/byte_format.dart';
 export 'src/tools/network_usage/network_usage_stats.dart';
 export 'src/tools/network_usage/network_usage_tool.dart';

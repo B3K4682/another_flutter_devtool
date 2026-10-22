@@ -18,9 +18,23 @@ class DevtoolController extends ChangeNotifier {
   final Map<String, bool> _settings = {};
   final Map<String, ChangeNotifier> _toolStates = {};
   bool _ready = false;
+  bool _panelOpen = false;
 
   /// True once storage and every tool finished initialising.
   bool get isReady => _ready;
+
+  /// Whether the devtool panel is currently shown over the app.
+  bool get isPanelOpen => _panelOpen;
+
+  void openPanel() => _setPanelOpen(true);
+
+  void closePanel() => _setPanelOpen(false);
+
+  void _setPanelOpen(bool value) {
+    if (_panelOpen == value) return;
+    _panelOpen = value;
+    notifyListeners();
+  }
 
   /// Sections shown on the home screen, in configuration order.
   List<DevtoolSection> get sections => config.sections;
