@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 
-import 'network_usage_overrides.dart';
+import '../../core/http/http_call_observer.dart';
 import 'network_usage_stats.dart';
 
 /// Counts HTTP traffic made through dart:io's HttpClient (Dio, http, images).
-class NetworkUsageTracker extends ChangeNotifier {
+class NetworkUsageTracker extends ChangeNotifier implements HttpCallObserver {
   NetworkUsageTracker({this.notifyInterval = const Duration(milliseconds: 500)});
 
   /// Shared tracker used by [NetworkUsageTool] by default.
@@ -43,7 +43,13 @@ class NetworkUsageTracker extends ChangeNotifier {
   /// Hooks into HttpOverrides.global; safe to call more than once.
   void install() {
     if (_installed) return;
-    _installed = installNetworkUsageOverrides(this);
+    _installed = DevtoolHttp.install(this);
+  }
+
+  @override
+  HttpCallListener onCall(String method, Uri uri) {
+    recordRequest(uri.host);
+    return _UsageListener(this, uri.host);
   }
 
   void recordRequest(String host) {
@@ -90,6 +96,26 @@ class NetworkUsageTracker extends ChangeNotifier {
     _notifyTimer?.cancel();
     super.dispose();
   }
+}
+
+class _UsageListener extends HttpCallListener {
+  _UsageListener(this._tracker, this._host);
+
+  final NetworkUsageTracker _tracker;
+  final String _host;
+
+  @override
+  void onRequestHeaders(Map<String, List<String>> headers, int bytes) => _tracker.recordSent(_host, bytes);
+
+  @override
+  void onRequestBody(List<int> chunk) => _tracker.recordSent(_host, chunk.length);
+
+  @override
+  void onResponseHeaders(int statusCode, String reasonPhrase, Map<String, List<String>> headers, int bytes) =>
+      _tracker.recordReceived(_host, bytes);
+
+  @override
+  void onResponseBody(List<int> chunk) => _tracker.recordReceived(_host, chunk.length);
 }
 
 class _HostCounter {

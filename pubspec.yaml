@@ -1,6 +1,6 @@
 name: another_flutter_devtool
 description: "An in-app devtool for Flutter with a draggable floating launcher and a full-screen devtool panel."
-version: 0.4.0
+version: 0.5.0
 homepage: https://github.com/B3K4682/another_flutter_devtool
 repository: https://github.com/B3K4682/another_flutter_devtool
 issue_tracker: https://github.com/B3K4682/another_flutter_devtool/issues
@@ -15,6 +15,7 @@ dependencies:
   device_info_plus: ^12.1.0
   package_info_plus: ^9.0.0
   shared_preferences: ^2.5.3
+  share_plus: ^12.0.2
 
 dev_dependencies:
   flutter_test:

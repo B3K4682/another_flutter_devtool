@@ -81,6 +81,25 @@ abstract final class DevtoolTheme {
         ),
         trackOutlineColor: const WidgetStatePropertyAll(DevtoolColors.border),
       ),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: DevtoolColors.hover,
+        contentTextStyle: const TextStyle(fontFamily: fontFamily, fontSize: 13, color: DevtoolColors.textPrimary),
+        actionTextColor: DevtoolColors.primary,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: DevtoolColors.border),
+        ),
+      ),
+      tabBarTheme: const TabBarThemeData(
+        labelColor: DevtoolColors.textPrimary,
+        unselectedLabelColor: DevtoolColors.textSecondary,
+        indicatorColor: DevtoolColors.primary,
+        indicatorSize: TabBarIndicatorSize.tab,
+        dividerColor: DevtoolColors.border,
+        labelStyle: TextStyle(fontFamily: fontFamily, fontSize: 13, fontWeight: FontWeight.w600),
+        unselectedLabelStyle: TextStyle(fontFamily: fontFamily, fontSize: 13, fontWeight: FontWeight.w500),
+      ),
       splashFactory: InkSparkle.splashFactory,
     );
   }

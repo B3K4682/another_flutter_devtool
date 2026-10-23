@@ -26,6 +26,7 @@ void main() {
             // This configuration is required to navigate to a route.
             configuration: ConfigurationTool(onNavigate: (route) => navigatorKey.currentState?.pushNamed(route)),
           ),
+          const NetworkSection(),
           playgroundSection,
         ],
       ),
@@ -85,6 +86,19 @@ class _CounterPageState extends State<CounterPage> {
   Future<void> _fetchWithDio() =>
       _run(() async => (await Dio().get<String>('https://httpbin.org/bytes/20480')).statusCode ?? 0);
 
+  Future<void> _postJson() => _run(() async => (await http.post(
+            Uri.parse('https://jsonplaceholder.typicode.com/posts?source=devtool'),
+            headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer example-token'},
+            body: '{"title": "Hello", "body": "From the devtool example", "userId": 1}',
+          ))
+          .statusCode);
+
+  Future<void> _fetchStatus(int status) =>
+      _run(() async => (await http.get(Uri.parse('https://httpbin.org/status/$status'))).statusCode);
+
+  Future<void> _fetchUnreachable() =>
+      _run(() async => (await http.get(Uri.parse('https://unreachable.invalid/ping'))).statusCode);
+
   Future<void> _run(Future<int> Function() request) async {
     try {
       final status = await request();
@@ -114,9 +128,15 @@ class _CounterPageState extends State<CounterPage> {
             const SizedBox(height: 24),
             Wrap(
               spacing: 12,
+              runSpacing: 8,
+              alignment: WrapAlignment.center,
               children: [
                 OutlinedButton(onPressed: _fetchWithHttp, child: const Text('Fetch with http')),
                 OutlinedButton(onPressed: _fetchWithDio, child: const Text('Fetch with Dio')),
+                OutlinedButton(onPressed: _postJson, child: const Text('POST JSON')),
+                OutlinedButton(onPressed: () => _fetchStatus(404), child: const Text('404')),
+                OutlinedButton(onPressed: () => _fetchStatus(500), child: const Text('500')),
+                OutlinedButton(onPressed: _fetchUnreachable, child: const Text('Unreachable host')),
               ],
             ),
             const SizedBox(height: 8),

@@ -57,6 +57,9 @@ class DevtoolController extends ChangeNotifier {
   Future<void> init() async {
     assert(_warnAboutUnreachableTools());
     await storage.load();
+    for (final section in sections) {
+      await section.init(this);
+    }
     for (final tool in tools) {
       await tool.init(this);
     }
@@ -110,6 +113,9 @@ class DevtoolController extends ChangeNotifier {
   void dispose() {
     for (final tool in tools) {
       tool.dispose();
+    }
+    for (final section in sections) {
+      section.dispose();
     }
     for (final state in _toolStates.values) {
       state.dispose();

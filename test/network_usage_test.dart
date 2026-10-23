@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:another_flutter_devtool/another_flutter_devtool.dart';
-import 'package:another_flutter_devtool/src/tools/network_usage/network_usage_overrides_io.dart';
+import 'package:another_flutter_devtool/src/core/http/devtool_http_overrides_io.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -64,7 +64,7 @@ void main() {
     });
   });
 
-  group('TrackingHttpClient', () {
+  group('ObservingHttpClient', () {
     late HttpServer server;
 
     setUp(() async {
@@ -90,7 +90,7 @@ void main() {
         final body = await response.transform(utf8.decoder).join();
         client.close();
         expect(body.length, 5000);
-      }, NetworkUsageHttpOverrides(tracker));
+      }, DevtoolHttpOverrides(observers: [tracker]));
 
       final stats = tracker.stats;
       expect(stats.requestCount, 1);

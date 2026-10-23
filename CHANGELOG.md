@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.5.0
+
+Adds the Network section.
+
+### Added
+
+* `NetworkSection`, recording every HTTP call made through dart:io's `HttpClient` (Dio, `http`, images):
+  * A list of calls with status (coloured by class), method, URL and duration, newest first.
+  * Search by URL, method or status, status filter chips (2xx, 3xx, 4xx, 5xx, Failed) and a call count.
+  * Pause and resume recording, clear with undo, and export every call as a `.json` file.
+  * A details page per call: query parameters, request and response headers and bodies, the error with its stack trace, Copy as cURL and a single-call JSON export.
+  * Sensitive headers are masked in exports (`redactedHeaders`).
+  * Keeps the last 500 calls, caps bodies at 256 KB and skips binary bodies (`NetworkRecorder(maxCalls:, maxBodyBytes:)`).
+* `NetworkRecorder`, `NetworkCall`, `exportCallsJson`, `exportCallJson` and `toCurl`.
+* `HttpCallObserver` and `DevtoolHttp`, so any tool can observe HTTP calls through the shared hook.
+* `DevtoolSection.init`, `dispose` and `buildPage`, so a section can show its own page instead of tool cards.
+* `DevtoolKeys` for the Network section.
+* Dependency on `share_plus`.
+
+### Changed
+
+* `NetworkUsageTracker` now uses the shared HTTP hook. `NetworkUsageHttpOverrides` is replaced by `DevtoolHttpOverrides`.
+
 ## 0.4.0
 
 Adds the Configuration tool with route navigation.

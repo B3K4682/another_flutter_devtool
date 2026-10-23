@@ -2,7 +2,7 @@
 
 An in-app devtool for Flutter. Wrap your app, and a small draggable launcher button appears on top of it. Tap it to open a full-screen devtool panel without leaving the app.
 
-> **Early stage:** 0.4.0 ships the launcher, the panel, and the App Information, Internet Data Usage and Configuration tools. More built-in tools are coming in future releases.
+> **Early stage:** 0.5.0 ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section. More built-in tools are coming in future releases.
 
 ## Features
 
@@ -10,6 +10,7 @@ An in-app devtool for Flutter. Wrap your app, and a small draggable launcher but
 - Full-screen panel that closes with the close button or the system back button.
 - App Information tool: app version and build number, device model, OS version, current flavor and startup time.
 - Internet Data Usage tool: data received, sent and total, request count and top hosts since launch. Works with Dio and `http` with no setup.
+- Network section: every HTTP call with its request, response and error. Search, filter by status, pause recording, export everything or a single call as JSON, and copy a call as cURL. Works with Dio and `http` with no setup.
 - Configuration tool: type a route like `/example` to close the devtool and jump straight to that screen. Works with any router.
 - Extensible: write your own section and tool, and it shows up alongside the built-in ones.
 - Fully isolated from your app: the panel has its own `MaterialApp` and theme, and your app keeps working underneath.
@@ -24,7 +25,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.4.0
+  another_flutter_devtool: ^0.5.0
 ```
 
 
@@ -79,6 +80,27 @@ AnotherFlutterDevtool(
 
 With go_router, use `onNavigate: (route) => router.go(route)` instead. Without
 `onNavigate`, the input stays disabled.
+
+### Network
+
+Add `NetworkSection` to see every HTTP call made through dart:io's `HttpClient`
+(Dio, `http`, `Image.network`). It is not available on web.
+
+```dart
+const DevtoolConfig(
+  enabled: kDebugMode,
+  sections: [GeneralSection(), NetworkSection()],
+);
+```
+
+- The list shows status, method, URL and duration, newest first. Filter it by URL, method or status
+  (`post 404` matches both), or narrow it down with the 2xx / 3xx / 4xx / 5xx / Failed chips.
+- Tap a call for its query parameters, headers, bodies (JSON is pretty-printed) and error with stack trace.
+- Export shares every recorded call (or a single call from its page) as a `.json` file. `Authorization`,
+  `Proxy-Authorization`, `Cookie` and `Set-Cookie` values are masked in exports; change that with
+  `NetworkSection(redactedHeaders: {...})`. Copy as cURL is not masked.
+- The last 500 calls are kept, bodies are capped at 256 KB, and binary bodies such as images are not stored.
+  Pass `NetworkSection(recorder: NetworkRecorder(maxCalls: 1000))` to change the limits.
 
 ### Configuration
 

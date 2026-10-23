@@ -20,6 +20,14 @@ class DevtoolSection {
   /// Tools the section ships with; registered tools are added to these.
   List<DevtoolTool> get tools => const [];
 
+  /// Called once when the devtool is first built, before the tools.
+  Future<void> init(DevtoolController controller) async {}
+
+  /// Return a page to replace the default list of tool cards.
+  Widget? buildPage(BuildContext context, DevtoolController controller) => null;
+
+  void dispose() {}
+
   @override
   bool operator ==(Object other) => other is DevtoolSection && other.id == id;
 

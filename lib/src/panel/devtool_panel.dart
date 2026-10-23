@@ -68,7 +68,10 @@ class _SectionCard extends StatelessWidget {
         borderRadius: borderRadius,
         hoverColor: DevtoolColors.hover,
         onTap: () => Navigator.of(context).push(
-          MaterialPageRoute<void>(builder: (_) => DevtoolSectionPage(section: section)),
+          MaterialPageRoute<void>(
+            builder: (context) =>
+                section.buildPage(context, DevtoolScope.of(context)) ?? DevtoolSectionPage(section: section),
+          ),
         ),
         child: Container(
           padding: const EdgeInsets.all(DevtoolSpacing.padding),
