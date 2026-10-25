@@ -29,8 +29,8 @@ jobs:
 
       - name: Check CHANGELOG has an entry for the pubspec version
         run: |
-          version=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}')
-          if ! grep -qx "## ${version}" CHANGELOG.md; then
+          version=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | tr -d '\r')
+          if ! tr -d '\r' < CHANGELOG.md | grep -qx "## ${version}"; then
             echo "::error file=CHANGELOG.md::Missing '## ${version}' section for pubspec version ${version}"
             exit 1
           fi

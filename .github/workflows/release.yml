@@ -26,7 +26,7 @@ jobs:
       - name: Read version
         id: version
         run: |
-          version=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}')
+          version=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | tr -d '\r')
           echo "version=${version}" >> "$GITHUB_OUTPUT"
           echo "tag=v${version}" >> "$GITHUB_OUTPUT"
 
@@ -44,7 +44,7 @@ jobs:
         if: steps.tag.outputs.exists == 'false'
         run: |
           awk -v heading="## ${{ steps.version.outputs.version }}" \
-            '$0 == heading { found = 1; next } /^## / && found { exit } found' CHANGELOG.md > notes.md
+            '{ sub(/\r$/, "") } $0 == heading { found = 1; next } /^## / && found { exit } found' CHANGELOG.md > notes.md
           if [ ! -s notes.md ]; then
             echo "::error file=CHANGELOG.md::No release notes found for ${{ steps.version.outputs.version }}"
             exit 1
