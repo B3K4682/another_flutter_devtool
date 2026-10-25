@@ -26,19 +26,19 @@ class NetworkUsageTracker extends ChangeNotifier implements HttpCallObserver {
   bool get isInstalled => _installed;
 
   NetworkUsageStats get stats => NetworkUsageStats(
-        bytesReceived: _received,
-        bytesSent: _sent,
-        requestCount: _requests,
-        hosts: {
-          for (final entry in _hosts.entries)
-            entry.key: HostUsage(
-              host: entry.key,
-              bytesReceived: entry.value.received,
-              bytesSent: entry.value.sent,
-              requests: entry.value.requests,
-            ),
-        },
-      );
+    bytesReceived: _received,
+    bytesSent: _sent,
+    requestCount: _requests,
+    hosts: {
+      for (final entry in _hosts.entries)
+        entry.key: HostUsage(
+          host: entry.key,
+          bytesReceived: entry.value.received,
+          bytesSent: entry.value.sent,
+          requests: entry.value.requests,
+        ),
+    },
+  );
 
   /// Hooks into HttpOverrides.global; safe to call more than once.
   void install() {

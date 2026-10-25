@@ -10,7 +10,7 @@ import '../network/network_recorder.dart';
 /// Not available on web.
 class NetworkSection extends DevtoolSection {
   const NetworkSection({this._recorder, this.redactedHeaders = defaultRedactedHeaders})
-      : super(id: sectionId, title: 'Network', icon: Icons.lan_outlined);
+    : super(id: sectionId, title: 'Network', icon: Icons.lan_outlined);
 
   static const sectionId = 'network';
 

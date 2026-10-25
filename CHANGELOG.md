@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.1
+
+Code style update. No behavior changes.
+
+### Changed
+
+* Formatted all Dart code with `dart format` at a page width of 120, set in `analysis_options.yaml`.
+
 ## 0.5.0
 
 Adds the Network section.

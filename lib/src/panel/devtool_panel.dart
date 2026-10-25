@@ -42,9 +42,7 @@ class DevtoolPanel extends StatelessWidget {
                 crossAxisSpacing: DevtoolSpacing.gap,
                 mainAxisSpacing: DevtoolSpacing.gap,
                 childAspectRatio: 2.5,
-                children: <Widget>[
-                  for (final section in sections) _SectionCard(section: section),
-                ],
+                children: <Widget>[for (final section in sections) _SectionCard(section: section)],
               ),
       ),
     );

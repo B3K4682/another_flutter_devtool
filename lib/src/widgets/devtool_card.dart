@@ -50,21 +50,13 @@ class DevtoolCard extends StatelessWidget {
                     tooltip: 'About $title',
                     visualDensity: VisualDensity.compact,
                     icon: const Icon(Icons.info_outline_rounded, size: 18),
-                    onPressed: () => showDevtoolInfoModal(
-                      context,
-                      title: title,
-                      description: description,
-                      icon: icon,
-                    ),
+                    onPressed: () => showDevtoolInfoModal(context, title: title, description: description, icon: icon),
                   ),
               ],
             ),
           ),
           const Divider(height: 1),
-          Padding(
-            padding: const EdgeInsets.all(DevtoolSpacing.padding),
-            child: child,
-          ),
+          Padding(padding: const EdgeInsets.all(DevtoolSpacing.padding), child: child),
         ],
       ),
     );

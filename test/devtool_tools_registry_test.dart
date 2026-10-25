@@ -5,9 +5,9 @@ import 'helpers/devtool_test_harness.dart';
 
 void main() {
   DevtoolController controllerWith(List<DevtoolSection> sections) => DevtoolController(
-        config: DevtoolConfig(enabled: true, sections: sections),
-        storage: InMemoryDevtoolStorage(),
-      );
+    config: DevtoolConfig(enabled: true, sections: sections),
+    storage: InMemoryDevtoolStorage(),
+  );
 
   tearDown(DevtoolTools.clear);
 
@@ -20,16 +20,15 @@ void main() {
   test('General ships with the app info, network usage and configuration tools', () {
     final controller = controllerWith(const [GeneralSection()]);
 
-    expect(
-      controller.toolsOf(const GeneralSection()).map((tool) => tool.id),
-      [AppInfoTool.toolId, NetworkUsageTool.toolId, ConfigurationTool.toolId],
-    );
+    expect(controller.toolsOf(const GeneralSection()).map((tool) => tool.id), [
+      AppInfoTool.toolId,
+      NetworkUsageTool.toolId,
+      ConfigurationTool.toolId,
+    ]);
   });
 
   test('General can be configured without built-in tools', () {
-    final controller = controllerWith(
-      const [GeneralSection(appInfo: null, networkUsage: null, configuration: null)],
-    );
+    final controller = controllerWith(const [GeneralSection(appInfo: null, networkUsage: null, configuration: null)]);
 
     expect(controller.toolsOf(const GeneralSection()), isEmpty);
     expect(controller.tools, isEmpty);
@@ -40,10 +39,12 @@ void main() {
     final controller = controllerWith(const [GeneralSection(), testCustomSection]);
 
     expect(controller.toolsOf(testCustomSection).map((tool) => tool.id), ['test_custom_tool']);
-    expect(
-      controller.tools.map((tool) => tool.id),
-      [AppInfoTool.toolId, NetworkUsageTool.toolId, ConfigurationTool.toolId, 'test_custom_tool'],
-    );
+    expect(controller.tools.map((tool) => tool.id), [
+      AppInfoTool.toolId,
+      NetworkUsageTool.toolId,
+      ConfigurationTool.toolId,
+      'test_custom_tool',
+    ]);
   });
 
   test('a registered tool replaces a built-in with the same id', () {
@@ -78,10 +79,11 @@ void main() {
     DevtoolTools.register(const TestCustomTool());
     final controller = controllerWith(const [GeneralSection()]);
 
-    expect(
-      controller.tools.map((tool) => tool.id),
-      [AppInfoTool.toolId, NetworkUsageTool.toolId, ConfigurationTool.toolId],
-    );
+    expect(controller.tools.map((tool) => tool.id), [
+      AppInfoTool.toolId,
+      NetworkUsageTool.toolId,
+      ConfigurationTool.toolId,
+    ]);
   });
 
   test('sections compare by id', () {

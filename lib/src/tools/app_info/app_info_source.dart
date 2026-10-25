@@ -82,14 +82,15 @@ class StaticAppInfoSource extends AppInfoSource {
   Duration? get startupDuration => data.startupDuration;
 
   @override
-  Future<AppInfoData> load({String? flavor}) async =>
-      flavor == null ? data : AppInfoData(
-            appName: data.appName,
-            version: data.version,
-            buildNumber: data.buildNumber,
-            deviceModel: data.deviceModel,
-            osVersion: data.osVersion,
-            flavor: flavor,
-            startupDuration: data.startupDuration,
-          );
+  Future<AppInfoData> load({String? flavor}) async => flavor == null
+      ? data
+      : AppInfoData(
+          appName: data.appName,
+          version: data.version,
+          buildNumber: data.buildNumber,
+          deviceModel: data.deviceModel,
+          osVersion: data.osVersion,
+          flavor: flavor,
+          startupDuration: data.startupDuration,
+        );
 }

@@ -112,8 +112,8 @@ bool isBinaryContentType(String? contentType) {
 /// Fills a [NetworkCall] in as the events of its HTTP call arrive.
 class NetworkCallRecording extends HttpCallListener {
   NetworkCallRecording(this.call, {required int maxBodyBytes, required this.onChanged})
-      : _request = _BodyBuffer(maxBodyBytes),
-        _response = _BodyBuffer(maxBodyBytes);
+    : _request = _BodyBuffer(maxBodyBytes),
+      _response = _BodyBuffer(maxBodyBytes);
 
   final NetworkCall call;
   final void Function() onChanged;
@@ -201,8 +201,8 @@ class _BodyBuffer {
   }
 
   NetworkBody build() => NetworkBody(
-        text: binary || _bytes.isEmpty ? null : utf8.decode(_bytes.toBytes(), allowMalformed: true),
-        truncated: truncated,
-        binary: binary && size > 0,
-      );
+    text: binary || _bytes.isEmpty ? null : utf8.decode(_bytes.toBytes(), allowMalformed: true),
+    truncated: truncated,
+    binary: binary && size > 0,
+  );
 }

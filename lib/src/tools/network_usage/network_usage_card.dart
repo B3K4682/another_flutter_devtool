@@ -41,10 +41,7 @@ class NetworkUsageCard extends StatelessWidget {
               DevtoolInfoRow(label: 'Sent', value: formatBytes(stats.bytesSent)),
               DevtoolInfoRow(label: 'Total', value: formatBytes(stats.total)),
               DevtoolInfoRow(label: 'Requests', value: '${stats.requestCount}'),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 10),
-                child: Divider(height: 1),
-              ),
+              const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1)),
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: Text('TOP HOSTS (RECEIVED)', style: theme.textTheme.labelSmall),
@@ -55,8 +52,7 @@ class NetworkUsageCard extends StatelessWidget {
                   child: Text('No requests yet', style: theme.textTheme.bodySmall),
                 )
               else
-                for (final host in topHosts)
-                  DevtoolInfoRow(label: host.host, value: formatBytes(host.bytesReceived)),
+                for (final host in topHosts) DevtoolInfoRow(label: host.host, value: formatBytes(host.bytesReceived)),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(

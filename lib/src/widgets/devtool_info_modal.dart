@@ -20,10 +20,8 @@ Future<void> showDevtoolInfoModal(
       title: Text(title),
       titleTextStyle: Theme.of(context).textTheme.titleMedium,
       content: Text(description),
-      contentTextStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: DevtoolColors.textSecondary,
-            height: 1.8,
-          ),
+      contentTextStyle: Theme.of(context).textTheme.bodyMedium
+          ?.copyWith(color: DevtoolColors.textSecondary, height: 1.8),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(

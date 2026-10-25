@@ -284,10 +284,12 @@ class _ObservingRequest implements HttpClientRequest {
   @override
   Future<void> addStream(Stream<List<int>> stream) {
     _sendHeaders();
-    return _inner.addStream(stream.map((chunk) {
-      _events.requestBody(chunk);
-      return chunk;
-    }));
+    return _inner.addStream(
+      stream.map((chunk) {
+        _events.requestBody(chunk);
+        return chunk;
+      }),
+    );
   }
 
   @override
@@ -320,20 +322,24 @@ class _ObservingRequest implements HttpClientRequest {
 
 class _ObservingResponse extends StreamView<List<int>> implements HttpClientResponse {
   _ObservingResponse(this._inner, _CallEvents events)
-      : super(_inner.transform(StreamTransformer.fromHandlers(
-          handleData: (chunk, sink) {
-            events.responseBody(chunk);
-            sink.add(chunk);
-          },
-          handleError: (error, stackTrace, sink) {
-            events.error(error, stackTrace);
-            sink.addError(error, stackTrace);
-          },
-          handleDone: (sink) {
-            events.done();
-            sink.close();
-          },
-        ))) {
+    : super(
+        _inner.transform(
+          StreamTransformer.fromHandlers(
+            handleData: (chunk, sink) {
+              events.responseBody(chunk);
+              sink.add(chunk);
+            },
+            handleError: (error, stackTrace, sink) {
+              events.error(error, stackTrace);
+              sink.addError(error, stackTrace);
+            },
+            handleDone: (sink) {
+              events.done();
+              sink.close();
+            },
+          ),
+        ),
+      ) {
     if (events.isEmpty) return;
     final statusLine = 'HTTP/1.1 ${_inner.statusCode} ${_inner.reasonPhrase}\r\n';
     events.responseHeaders(

@@ -39,10 +39,7 @@ class _DraggableLauncherState extends State<DraggableLauncher> {
     final bounds = _bounds(context);
     final position = _clamp(
       widget.offset ??
-          Offset(
-            bounds.left + DraggableLauncher.initialMargin,
-            bounds.top + DraggableLauncher.initialMargin,
-          ),
+          Offset(bounds.left + DraggableLauncher.initialMargin, bounds.top + DraggableLauncher.initialMargin),
       bounds,
     );
     final versionLabel = widget.versionLabel;
@@ -58,9 +55,8 @@ class _DraggableLauncherState extends State<DraggableLauncher> {
           _dragStartPointer = details.globalPosition;
           _dragStartPosition = position;
         },
-        onPanUpdate: (details) => widget.onMoved(
-          _clamp(_dragStartPosition + details.globalPosition - _dragStartPointer, bounds),
-        ),
+        onPanUpdate: (details) =>
+            widget.onMoved(_clamp(_dragStartPosition + details.globalPosition - _dragStartPointer, bounds)),
         child: SizedBox(
           width: DraggableLauncher.size,
           height: DraggableLauncher.size,
@@ -103,10 +99,8 @@ class _DraggableLauncherState extends State<DraggableLauncher> {
     return Rect.fromLTRB(left, top, right, bottom);
   }
 
-  Offset _clamp(Offset value, Rect bounds) => Offset(
-        value.dx.clamp(bounds.left, bounds.right),
-        value.dy.clamp(bounds.top, bounds.bottom),
-      );
+  Offset _clamp(Offset value, Rect bounds) =>
+      Offset(value.dx.clamp(bounds.left, bounds.right), value.dy.clamp(bounds.top, bounds.bottom));
 }
 
 class _VersionBadge extends StatelessWidget {

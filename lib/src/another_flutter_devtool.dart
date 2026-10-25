@@ -13,11 +13,7 @@ import 'tools/app_info/startup_tracker.dart';
 
 /// Wraps an app and overlays the devtool launcher and panel on top of it.
 class AnotherFlutterDevtool extends StatefulWidget {
-  const AnotherFlutterDevtool({
-    super.key,
-    required this.config,
-    required this.child,
-  });
+  const AnotherFlutterDevtool({super.key, required this.config, required this.child});
 
   /// main Configuration for the devtool.
   final DevtoolConfig config;

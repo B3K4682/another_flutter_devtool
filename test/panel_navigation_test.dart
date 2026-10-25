@@ -58,10 +58,7 @@ void main() {
   });
 
   testWidgets('a registered tool lands in the General section too', (tester) async {
-    await pumpDevtool(
-      tester,
-      register: const [TestCustomTool(section: GeneralSection())],
-    );
+    await pumpDevtool(tester, register: const [TestCustomTool(section: GeneralSection())]);
     await openPanel(tester);
     await openSection(tester, GeneralSection.sectionId);
 

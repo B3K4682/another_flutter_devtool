@@ -41,13 +41,13 @@ class TestCustomTool extends DevtoolTool {
 
   @override
   Widget build(BuildContext context, DevtoolController controller) => DevtoolCard(
-        key: DevtoolKeys.toolCard(id),
-        icon: icon,
-        title: title,
-        description: description,
-        infoButtonKey: DevtoolKeys.toolInfoButton(id),
-        child: const Text('custom tool body'),
-      );
+    key: DevtoolKeys.toolCard(id),
+    icon: icon,
+    title: title,
+    description: description,
+    infoButtonKey: DevtoolKeys.toolInfoButton(id),
+    child: const Text('custom tool body'),
+  );
 }
 
 /// Counter app standing in for the host application under the devtool.
@@ -66,10 +66,7 @@ class _TestHostAppState extends State<TestHostApp> {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: ElevatedButton(
-            onPressed: () => setState(() => _count++),
-            child: Text('count: $_count'),
-          ),
+          child: ElevatedButton(onPressed: () => setState(() => _count++), child: Text('count: $_count')),
         ),
       ),
     );

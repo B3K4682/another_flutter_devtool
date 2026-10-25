@@ -40,8 +40,7 @@ class DevtoolController extends ChangeNotifier {
   List<DevtoolSection> get sections => config.sections;
 
   /// Every tool reachable through a configured section.
-  List<DevtoolTool> get tools =>
-      [for (final section in sections) ...toolsOf(section)];
+  List<DevtoolTool> get tools => [for (final section in sections) ...toolsOf(section)];
 
   /// Tools of [section]: the ones it ships with, plus the registered tools
   /// pointing at it. A registered tool replaces a built-in with the same id.

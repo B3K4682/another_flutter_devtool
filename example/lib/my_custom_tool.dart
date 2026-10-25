@@ -2,11 +2,7 @@ import 'package:another_flutter_devtool/another_flutter_devtool.dart';
 import 'package:flutter/material.dart';
 
 /// Your own section; add it to `DevtoolConfig.sections` to show it on the home screen.
-const playgroundSection = DevtoolSection(
-  id: 'playground',
-  title: 'Playground',
-  icon: Icons.science_rounded,
-);
+const playgroundSection = DevtoolSection(id: 'playground', title: 'Playground', icon: Icons.science_rounded);
 
 /// Your own tool; it reaches [playgroundSection] through [section].
 class MyCustomTool extends DevtoolTool {
@@ -39,7 +35,6 @@ class MyCustomTool extends DevtoolTool {
     );
   }
 }
-
 
 /// Another custom tool
 class MyCustomTool2 extends DevtoolTool {

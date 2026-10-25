@@ -4,27 +4,27 @@ import 'package:another_flutter_devtool/another_flutter_devtool.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 NetworkCall _call() => NetworkCall(
-      id: 7,
-      method: 'POST',
-      uri: Uri.parse('https://api.example.com/posts?tag=a&tag=b'),
-      startedAt: DateTime(2026, 10, 22, 20, 11, 5),
-      state: NetworkCallState.completed,
-      duration: const Duration(milliseconds: 223),
-      requestHeaders: const {
-        'authorization': ['Bearer secret'],
-        'content-type': ['application/json'],
-        'content-length': ['13'],
-      },
-      requestBody: const NetworkBody(text: '{"it\'s": "ok"}'),
-      requestSize: 13,
-      statusCode: 201,
-      reasonPhrase: 'Created',
-      responseHeaders: const {
-        'set-cookie': ['a=1', 'b=2'],
-      },
-      responseBody: const NetworkBody(text: '{"id": 1}'),
-      responseSize: 9,
-    );
+  id: 7,
+  method: 'POST',
+  uri: Uri.parse('https://api.example.com/posts?tag=a&tag=b'),
+  startedAt: DateTime(2026, 10, 22, 20, 11, 5),
+  state: NetworkCallState.completed,
+  duration: const Duration(milliseconds: 223),
+  requestHeaders: const {
+    'authorization': ['Bearer secret'],
+    'content-type': ['application/json'],
+    'content-length': ['13'],
+  },
+  requestBody: const NetworkBody(text: '{"it\'s": "ok"}'),
+  requestSize: 13,
+  statusCode: 201,
+  reasonPhrase: 'Created',
+  responseHeaders: const {
+    'set-cookie': ['a=1', 'b=2'],
+  },
+  responseBody: const NetworkBody(text: '{"id": 1}'),
+  responseSize: 9,
+);
 
 void main() {
   test('exports calls as JSON with redacted headers', () {

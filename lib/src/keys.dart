@@ -28,14 +28,11 @@ abstract final class DevtoolKeys {
 
   static ValueKey<String> networkCallRow(int callId) => ValueKey('another_flutter_devtool.network_call_row.$callId');
 
-  static ValueKey<String> sectionCard(String sectionId) =>
-      ValueKey('another_flutter_devtool.section_card.$sectionId');
+  static ValueKey<String> sectionCard(String sectionId) => ValueKey('another_flutter_devtool.section_card.$sectionId');
 
-  static ValueKey<String> sectionPage(String sectionId) =>
-      ValueKey('another_flutter_devtool.section_page.$sectionId');
+  static ValueKey<String> sectionPage(String sectionId) => ValueKey('another_flutter_devtool.section_page.$sectionId');
 
   static ValueKey<String> toolCard(String toolId) => ValueKey('another_flutter_devtool.tool_card.$toolId');
 
-  static ValueKey<String> toolInfoButton(String toolId) =>
-      ValueKey('another_flutter_devtool.tool_info_button.$toolId');
+  static ValueKey<String> toolInfoButton(String toolId) => ValueKey('another_flutter_devtool.tool_info_button.$toolId');
 }
