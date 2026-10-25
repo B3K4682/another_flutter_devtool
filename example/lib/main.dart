@@ -43,9 +43,7 @@ class ExampleApp extends StatelessWidget {
     return MaterialApp(
       title: 'Devtool Example',
       navigatorKey: navigatorKey,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-      ),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo)),
       home: const CounterPage(),
       routes: {
         '/example': (_) => const PlaceholderPage(title: '/example'),
@@ -86,12 +84,13 @@ class _CounterPageState extends State<CounterPage> {
   Future<void> _fetchWithDio() =>
       _run(() async => (await Dio().get<String>('https://httpbin.org/bytes/20480')).statusCode ?? 0);
 
-  Future<void> _postJson() => _run(() async => (await http.post(
-            Uri.parse('https://jsonplaceholder.typicode.com/posts?source=devtool'),
-            headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer example-token'},
-            body: '{"title": "Hello", "body": "From the devtool example", "userId": 1}',
-          ))
-          .statusCode);
+  Future<void> _postJson() => _run(
+    () async => (await http.post(
+      Uri.parse('https://jsonplaceholder.typicode.com/posts?source=devtool'),
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer example-token'},
+      body: '{"title": "Hello", "body": "From the devtool example", "userId": 1}',
+    )).statusCode,
+  );
 
   Future<void> _fetchStatus(int status) =>
       _run(() async => (await http.get(Uri.parse('https://httpbin.org/status/$status'))).statusCode);
@@ -116,15 +115,9 @@ class _CounterPageState extends State<CounterPage> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'Drag the code icon around, tap it to open the devtool.',
-            ),
+            const Text('Drag the code icon around, tap it to open the devtool.'),
             const SizedBox(height: 16),
-            Text(
-              'Count: $_count',
-              key: const Key('counter_text'),
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text('Count: $_count', key: const Key('counter_text'), style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 24),
             Wrap(
               spacing: 12,

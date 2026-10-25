@@ -25,10 +25,7 @@ void main() {
 
     test('formats the startup duration', () {
       expect(testAppInfo.startupLabel, '412 ms');
-      expect(
-        testAppInfo.copyWith(startupDuration: const Duration(milliseconds: 1500)).startupLabel,
-        '1.50 s',
-      );
+      expect(testAppInfo.copyWith(startupDuration: const Duration(milliseconds: 1500)).startupLabel, '1.50 s');
     });
 
     test('reports a pending startup measurement', () {

@@ -8,12 +8,12 @@ void main() {
   final badge = find.byKey(DevtoolKeys.versionBadge);
 
   GeneralSection generalWith({bool showVersionBadgeByDefault = true, String? flavor}) => GeneralSection(
-        appInfo: AppInfoTool(
-          source: const StaticAppInfoSource(testAppInfo),
-          flavor: flavor,
-          showVersionBadgeByDefault: showVersionBadgeByDefault,
-        ),
-      );
+    appInfo: AppInfoTool(
+      source: const StaticAppInfoSource(testAppInfo),
+      flavor: flavor,
+      showVersionBadgeByDefault: showVersionBadgeByDefault,
+    ),
+  );
 
   Future<void> openAppInfo(
     WidgetTester tester, {

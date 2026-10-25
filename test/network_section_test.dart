@@ -6,24 +6,24 @@ import 'package:flutter_test/flutter_test.dart';
 import 'helpers/devtool_test_harness.dart';
 
 NetworkCall _call(int id, String method, String url, {int? status, Object? error, int ms = 120}) => NetworkCall(
-      id: id,
-      method: method,
-      uri: Uri.parse(url),
-      startedAt: DateTime(2026, 10, 22, 20, 11, id),
-      state: error == null ? NetworkCallState.completed : NetworkCallState.failed,
-      duration: Duration(milliseconds: ms),
-      requestHeaders: const {
-        'accept': ['application/json'],
-      },
-      statusCode: status,
-      reasonPhrase: status == null ? null : 'Reason',
-      responseHeaders: const {
-        'content-type': ['application/json'],
-      },
-      responseBody: status == null ? NetworkBody.empty : const NetworkBody(text: '{"ok":true}'),
-      error: error,
-      stackTrace: error == null ? null : StackTrace.current,
-    );
+  id: id,
+  method: method,
+  uri: Uri.parse(url),
+  startedAt: DateTime(2026, 10, 22, 20, 11, id),
+  state: error == null ? NetworkCallState.completed : NetworkCallState.failed,
+  duration: Duration(milliseconds: ms),
+  requestHeaders: const {
+    'accept': ['application/json'],
+  },
+  statusCode: status,
+  reasonPhrase: status == null ? null : 'Reason',
+  responseHeaders: const {
+    'content-type': ['application/json'],
+  },
+  responseBody: status == null ? NetworkBody.empty : const NetworkBody(text: '{"ok":true}'),
+  error: error,
+  stackTrace: error == null ? null : StackTrace.current,
+);
 
 Future<NetworkRecorder> _pumpNetwork(WidgetTester tester) async {
   final recorder = NetworkRecorder(notifyInterval: Duration.zero);
@@ -35,7 +35,13 @@ Future<NetworkRecorder> _pumpNetwork(WidgetTester tester) async {
     ..add(_call(4, 'DELETE', 'https://api.example.com/planets/1', status: 500, ms: 1500))
     ..add(_call(5, 'GET', 'https://down.example.com/', error: 'SocketException: Connection refused'));
 
-  await pumpDevtool(tester, sections: [testGeneralSection, NetworkSection(recorder: recorder)]);
+  await pumpDevtool(
+    tester,
+    sections: [
+      testGeneralSection,
+      NetworkSection(recorder: recorder),
+    ],
+  );
   await openPanel(tester);
   await openSection(tester, NetworkSection.sectionId);
   return recorder;

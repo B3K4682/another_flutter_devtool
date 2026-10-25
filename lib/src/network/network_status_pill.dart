@@ -20,10 +20,7 @@ class NetworkStatusPill extends StatelessWidget {
       width: 44,
       height: 22,
       alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(6),
-      ),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(6)),
       child: group == NetworkStatusGroup.pending
           ? const SizedBox.square(
               dimension: 10,

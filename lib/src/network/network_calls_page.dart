@@ -68,25 +68,25 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
     if (removed.isEmpty) return;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text('Cleared ${_countLabel(removed.length)}'),
-        action: SnackBarAction(label: 'Undo', onPressed: () => _recorder.restore(removed)),
-      ));
+      ..showSnackBar(
+        SnackBar(
+          content: Text('Cleared ${_countLabel(removed.length)}'),
+          action: SnackBarAction(label: 'Undo', onPressed: () => _recorder.restore(removed)),
+        ),
+      );
   }
 
   Future<void> _export(BuildContext buttonContext) => shareJson(
-        buttonContext,
-        json: exportCallsJson(_recorder.calls, redactedHeaders: widget.redactedHeaders),
-        fileName: callsFileName(DateTime.now()),
-      );
+    buttonContext,
+    json: exportCallsJson(_recorder.calls, redactedHeaders: widget.redactedHeaders),
+    fileName: callsFileName(DateTime.now()),
+  );
 
-  void _open(NetworkCall call) => Navigator.of(context).push(MaterialPageRoute<void>(
-        builder: (_) => NetworkCallDetailsPage(
-          recorder: _recorder,
-          call: call,
-          redactedHeaders: widget.redactedHeaders,
-        ),
-      ));
+  void _open(NetworkCall call) => Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      builder: (_) => NetworkCallDetailsPage(recorder: _recorder, call: call, redactedHeaders: widget.redactedHeaders),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -135,9 +135,7 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
               ),
               _FilterBar(
                 selected: _filter,
-                counts: {
-                  for (final filter in _StatusFilter.values) filter: searched.where(filter.matches).length,
-                },
+                counts: {for (final filter in _StatusFilter.values) filter: searched.where(filter.matches).length},
                 onSelected: (filter) => setState(() => _filter = filter),
               ),
               Padding(
@@ -161,8 +159,8 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
                         title: !_recorder.isInstalled && calls.isEmpty
                             ? 'Capture is not available on this platform'
                             : calls.isEmpty
-                                ? 'No calls yet'
-                                : 'No calls match',
+                            ? 'No calls yet'
+                            : 'No calls match',
                         subtitle: calls.isEmpty && _recorder.isInstalled
                             ? 'Requests made by the app show up here.'
                             : null,
@@ -350,10 +348,7 @@ class _PausedTag extends StatelessWidget {
           decoration: const BoxDecoration(color: DevtoolColors.warning, shape: BoxShape.circle),
         ),
         const SizedBox(width: 6),
-        Text(
-          'Paused',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: DevtoolColors.warning),
-        ),
+        Text('Paused', style: Theme.of(context).textTheme.bodySmall?.copyWith(color: DevtoolColors.warning)),
       ],
     );
   }

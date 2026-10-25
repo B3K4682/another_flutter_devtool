@@ -18,12 +18,12 @@ String formatTime(DateTime time) {
 }
 
 Color statusColor(NetworkStatusGroup group) => switch (group) {
-      NetworkStatusGroup.success => DevtoolColors.success,
-      NetworkStatusGroup.informational || NetworkStatusGroup.redirect => DevtoolColors.info,
-      NetworkStatusGroup.clientError => DevtoolColors.warning,
-      NetworkStatusGroup.serverError || NetworkStatusGroup.failed => DevtoolColors.error,
-      NetworkStatusGroup.pending => DevtoolColors.textSecondary,
-    };
+  NetworkStatusGroup.success => DevtoolColors.success,
+  NetworkStatusGroup.informational || NetworkStatusGroup.redirect => DevtoolColors.info,
+  NetworkStatusGroup.clientError => DevtoolColors.warning,
+  NetworkStatusGroup.serverError || NetworkStatusGroup.failed => DevtoolColors.error,
+  NetworkStatusGroup.pending => DevtoolColors.textSecondary,
+};
 
 /// Host, port and path with query, without the scheme.
 String displayUrl(Uri uri) {

@@ -60,13 +60,13 @@ Map<String, Object?> networkCallToJson(NetworkCall call, {Set<String> redactedHe
 }
 
 Map<String, Object> _headersToJson(Map<String, List<String>> headers, Set<String> redacted) => {
-      for (final entry in headers.entries)
-        entry.key: redacted.contains(entry.key.toLowerCase())
-            ? _redacted
-            : entry.value.length == 1
-                ? entry.value.single
-                : entry.value,
-    };
+  for (final entry in headers.entries)
+    entry.key: redacted.contains(entry.key.toLowerCase())
+        ? _redacted
+        : entry.value.length == 1
+        ? entry.value.single
+        : entry.value,
+};
 
 /// Embeds JSON bodies as JSON, everything else as a string.
 Object? _bodyToJson(NetworkBody body) {

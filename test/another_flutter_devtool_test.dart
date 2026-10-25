@@ -32,16 +32,11 @@ void main() {
 
     expect(tester.getSize(launcher), const Size(36, 36));
 
-    final container = tester.widget<Container>(
-      find.descendant(of: launcher, matching: find.byType(Container)).first,
-    );
+    final container = tester.widget<Container>(find.descendant(of: launcher, matching: find.byType(Container)).first);
     final decoration = container.decoration! as BoxDecoration;
     expect(decoration.borderRadius, BorderRadius.circular(8));
     expect(decoration.color, DevtoolColors.primary);
-    expect(
-      find.descendant(of: launcher, matching: find.byIcon(Icons.code_rounded)),
-      findsOneWidget,
-    );
+    expect(find.descendant(of: launcher, matching: find.byIcon(Icons.code_rounded)), findsOneWidget);
   });
 
   testWidgets('tapping launcher opens panel and close button dismisses it', (tester) async {

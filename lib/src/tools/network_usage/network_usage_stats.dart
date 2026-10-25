@@ -3,12 +3,7 @@ import 'package:flutter/foundation.dart';
 /// Traffic counted for a single host since launch.
 @immutable
 class HostUsage {
-  const HostUsage({
-    required this.host,
-    this.bytesReceived = 0,
-    this.bytesSent = 0,
-    this.requests = 0,
-  });
+  const HostUsage({required this.host, this.bytesReceived = 0, this.bytesSent = 0, this.requests = 0});
 
   final String host;
   final int bytesReceived;
@@ -21,12 +16,7 @@ class HostUsage {
 /// Snapshot of all HTTP traffic counted since launch.
 @immutable
 class NetworkUsageStats {
-  const NetworkUsageStats({
-    this.bytesReceived = 0,
-    this.bytesSent = 0,
-    this.requestCount = 0,
-    this.hosts = const {},
-  });
+  const NetworkUsageStats({this.bytesReceived = 0, this.bytesSent = 0, this.requestCount = 0, this.hosts = const {}});
 
   static const empty = NetworkUsageStats();
 

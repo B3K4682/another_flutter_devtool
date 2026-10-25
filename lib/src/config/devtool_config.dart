@@ -27,10 +27,7 @@ class DevtoolConfig {
 
 /// Configuration for the floating, draggable launcher button.
 class LauncherConfig {
-  const LauncherConfig({
-    this.enabled = true,
-    this.initiallyVisible = true,
-  });
+  const LauncherConfig({this.enabled = true, this.initiallyVisible = true});
 
   /// When false, the launcher is never shown.
   final bool enabled;

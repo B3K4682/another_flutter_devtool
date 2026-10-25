@@ -57,12 +57,12 @@ class AppInfoData {
   }
 
   AppInfoData copyWith({Duration? startupDuration}) => AppInfoData(
-        appName: appName,
-        version: version,
-        buildNumber: buildNumber,
-        deviceModel: deviceModel,
-        osVersion: osVersion,
-        flavor: flavor,
-        startupDuration: startupDuration ?? this.startupDuration,
-      );
+    appName: appName,
+    version: version,
+    buildNumber: buildNumber,
+    deviceModel: deviceModel,
+    osVersion: osVersion,
+    flavor: flavor,
+    startupDuration: startupDuration ?? this.startupDuration,
+  );
 }

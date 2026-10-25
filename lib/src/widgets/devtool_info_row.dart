@@ -4,12 +4,7 @@ import '../theme/devtool_theme.dart';
 
 /// Label on the left, value on the right; the building block of info cards.
 class DevtoolInfoRow extends StatelessWidget {
-  const DevtoolInfoRow({
-    super.key,
-    required this.label,
-    required this.value,
-    this.valueColor,
-  });
+  const DevtoolInfoRow({super.key, required this.label, required this.value, this.valueColor});
 
   final String label;
   final String value;

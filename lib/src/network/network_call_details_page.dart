@@ -167,8 +167,15 @@ class _RequestTab extends StatelessWidget {
 
     return _TabList(
       children: [
-        if (query.isNotEmpty) _Block(label: 'Query parameters', child: _KeyValueTable(entries: query)),
-        _Block(label: 'Headers', child: _KeyValueTable(entries: call.requestHeaders)),
+        if (query.isNotEmpty)
+          _Block(
+            label: 'Query parameters',
+            child: _KeyValueTable(entries: query),
+          ),
+        _Block(
+          label: 'Headers',
+          child: _KeyValueTable(entries: call.requestHeaders),
+        ),
         _Block(
           label: 'Body',
           child: _BodyView(body: call.requestBody, size: call.requestSize, maxBodyBytes: maxBodyBytes),
@@ -202,7 +209,10 @@ class _ResponseTab extends StatelessWidget {
             ),
           ),
         ),
-        _Block(label: 'Headers', child: _KeyValueTable(entries: call.responseHeaders)),
+        _Block(
+          label: 'Headers',
+          child: _KeyValueTable(entries: call.responseHeaders),
+        ),
         _Block(
           label: 'Body',
           child: call.isPending && call.responseBody.text == null
@@ -227,7 +237,9 @@ class _ErrorTab extends StatelessWidget {
       children: [
         _Block(
           label: 'Error',
-          child: _Panel(child: SelectableText('${call.error}', style: monoStyle.copyWith(color: DevtoolColors.error))),
+          child: _Panel(
+            child: SelectableText('${call.error}', style: monoStyle.copyWith(color: DevtoolColors.error)),
+          ),
         ),
         if (stackTrace.isNotEmpty)
           _Block(
@@ -322,7 +334,10 @@ class _KeyValueTable extends StatelessWidget {
                 children: [
                   Expanded(
                     flex: 2,
-                    child: SelectableText(rows[index].$1, style: monoStyle.copyWith(color: DevtoolColors.textSecondary)),
+                    child: SelectableText(
+                      rows[index].$1,
+                      style: monoStyle.copyWith(color: DevtoolColors.textSecondary),
+                    ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(flex: 3, child: SelectableText(rows[index].$2, style: monoStyle)),
@@ -391,8 +406,8 @@ class _Dot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        width: 6,
-        height: 6,
-        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-      );
+    width: 6,
+    height: 6,
+    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+  );
 }

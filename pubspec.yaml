@@ -1,6 +1,6 @@
 name: another_flutter_devtool
 description: "An in-app devtool for Flutter with a draggable floating launcher and a full-screen devtool panel."
-version: 0.5.0
+version: 0.5.1
 homepage: https://github.com/B3K4682/another_flutter_devtool
 repository: https://github.com/B3K4682/another_flutter_devtool
 issue_tracker: https://github.com/B3K4682/another_flutter_devtool/issues

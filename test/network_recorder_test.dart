@@ -37,17 +37,14 @@ void main() {
     await server.close(force: true);
   });
 
-  Future<T> withRecorder<T>(Future<T> Function(HttpClient client) body) => HttpOverrides.runWithHttpOverrides(
-        () async {
-          final client = HttpClient();
-          try {
-            return await body(client);
-          } finally {
-            client.close(force: true);
-          }
-        },
-        DevtoolHttpOverrides(observers: [recorder]),
-      );
+  Future<T> withRecorder<T>(Future<T> Function(HttpClient client) body) => HttpOverrides.runWithHttpOverrides(() async {
+    final client = HttpClient();
+    try {
+      return await body(client);
+    } finally {
+      client.close(force: true);
+    }
+  }, DevtoolHttpOverrides(observers: [recorder]));
 
   Future<String> send(HttpClient client, String method, String path, {String? body}) async {
     final request = await client.openUrl(method, Uri.parse('http://127.0.0.1:${server.port}$path'));

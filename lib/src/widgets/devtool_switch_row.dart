@@ -4,13 +4,7 @@ import '../theme/devtool_theme.dart';
 
 /// Toggle row used inside devtool cards.
 class DevtoolSwitchRow extends StatelessWidget {
-  const DevtoolSwitchRow({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.onChanged,
-    this.subtitle,
-  });
+  const DevtoolSwitchRow({super.key, required this.label, required this.value, required this.onChanged, this.subtitle});
 
   final String label;
   final String? subtitle;
@@ -29,10 +23,7 @@ class DevtoolSwitchRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(label, style: theme.textTheme.bodyMedium),
-              if (subtitle != null) ...[
-                const SizedBox(height: 2),
-                Text(subtitle, style: theme.textTheme.labelSmall),
-              ],
+              if (subtitle != null) ...[const SizedBox(height: 2), Text(subtitle, style: theme.textTheme.labelSmall)],
             ],
           ),
         ),

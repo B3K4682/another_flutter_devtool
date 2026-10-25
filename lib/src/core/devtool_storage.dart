@@ -27,8 +27,7 @@ class SharedPreferencesDevtoolStorage implements DevtoolStorage {
 
 /// Storage that keeps values only for the current session; used by tests.
 class InMemoryDevtoolStorage implements DevtoolStorage {
-  InMemoryDevtoolStorage([Map<String, Object>? initialValues])
-      : _values = {...?initialValues};
+  InMemoryDevtoolStorage([Map<String, Object>? initialValues]) : _values = {...?initialValues};
 
   final Map<String, Object> _values;
 

@@ -67,7 +67,9 @@ class _ConfigurationCardState extends State<ConfigurationCard> {
                   style: theme.textTheme.bodyMedium,
                   decoration: InputDecoration(
                     hintText: '/example',
-                    hintStyle: theme.textTheme.bodyMedium?.copyWith(color: theme.colorScheme.onSurface.withValues(alpha: 0.5)),
+                    hintStyle: theme.textTheme.bodyMedium?.copyWith(
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
                     isDense: true,
                     border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                   ),

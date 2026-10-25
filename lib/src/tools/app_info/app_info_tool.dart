@@ -9,11 +9,7 @@ import 'app_info_state.dart';
 
 /// Shows app version, device, OS, flavor and startup time in the General tab.
 class AppInfoTool extends DevtoolTool {
-  const AppInfoTool({
-    this.source = const PlatformAppInfoSource(),
-    this.flavor,
-    this.showVersionBadgeByDefault = true,
-  });
+  const AppInfoTool({this.source = const PlatformAppInfoSource(), this.flavor, this.showVersionBadgeByDefault = true});
 
   static const toolId = 'app_info';
 
@@ -48,10 +44,7 @@ class AppInfoTool extends DevtoolTool {
 
   @override
   Future<void> init(DevtoolController controller) async {
-    controller.registerBoolSetting(
-      DevtoolController.showVersionBadgeKey,
-      defaultValue: showVersionBadgeByDefault,
-    );
+    controller.registerBoolSetting(DevtoolController.showVersionBadgeKey, defaultValue: showVersionBadgeByDefault);
 
     final state = AppInfoState(source: source, flavor: flavor)..addListener(controller.refresh);
     controller.registerToolState(toolId, state);
@@ -59,6 +52,5 @@ class AppInfoTool extends DevtoolTool {
   }
 
   @override
-  Widget build(BuildContext context, DevtoolController controller) =>
-      AppInfoCard(tool: this, controller: controller);
+  Widget build(BuildContext context, DevtoolController controller) => AppInfoCard(tool: this, controller: controller);
 }

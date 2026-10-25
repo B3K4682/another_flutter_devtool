@@ -70,10 +70,7 @@ class _Content extends StatelessWidget {
         DevtoolInfoRow(label: 'OS version', value: data.osVersion),
         DevtoolInfoRow(label: 'Current flavor', value: data.flavor, valueColor: _flavorColor(data.flavor)),
         DevtoolInfoRow(label: 'App startup time', value: data.startupLabel),
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Divider(height: 1),
-        ),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 10), child: Divider(height: 1)),
         DevtoolSwitchRow(
           label: 'Show version below launcher',
           subtitle: data.badgeLabel,
@@ -85,11 +82,11 @@ class _Content extends StatelessWidget {
   }
 
   Color? _flavorColor(String flavor) => switch (flavor) {
-        'Debug' => DevtoolColors.warning,
-        'Profile' => DevtoolColors.info,
-        'Release' => DevtoolColors.success,
-        _ => null,
-      };
+    'Debug' => DevtoolColors.warning,
+    'Profile' => DevtoolColors.info,
+    'Release' => DevtoolColors.success,
+    _ => null,
+  };
 }
 
 class _Loading extends StatelessWidget {

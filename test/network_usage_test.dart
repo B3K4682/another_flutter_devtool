@@ -151,7 +151,9 @@ void main() {
     testWidgets('can be hidden', (tester) async {
       await pumpDevtool(
         tester,
-        sections: const [GeneralSection(appInfo: AppInfoTool(source: StaticAppInfoSource(testAppInfo)), networkUsage: null)],
+        sections: const [
+          GeneralSection(appInfo: AppInfoTool(source: StaticAppInfoSource(testAppInfo)), networkUsage: null),
+        ],
       );
       await openPanel(tester);
       await openSection(tester, GeneralSection.sectionId);

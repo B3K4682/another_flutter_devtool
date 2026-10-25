@@ -12,11 +12,13 @@ Future<void> shareJson(BuildContext context, {required String json, required Str
   final box = context.findRenderObject() as RenderBox?;
   final origin = box == null ? null : box.localToGlobal(Offset.zero) & box.size;
   try {
-    final result = await SharePlus.instance.share(ShareParams(
-      files: [XFile.fromData(utf8.encode(json), mimeType: 'application/json', name: fileName)],
-      fileNameOverrides: [fileName],
-      sharePositionOrigin: origin,
-    ));
+    final result = await SharePlus.instance.share(
+      ShareParams(
+        files: [XFile.fromData(utf8.encode(json), mimeType: 'application/json', name: fileName)],
+        fileNameOverrides: [fileName],
+        sharePositionOrigin: origin,
+      ),
+    );
     if (result.status != ShareResultStatus.unavailable) return;
   } catch (_) {
     // Falls through to the clipboard.
