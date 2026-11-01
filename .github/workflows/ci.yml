@@ -35,6 +35,15 @@ jobs:
             exit 1
           fi
 
+      - name: Check the pubspec version is not released yet
+        if: github.event_name == 'pull_request' && github.base_ref == 'main'
+        run: |
+          version=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | tr -d '\r')
+          if git ls-remote --exit-code --tags origin "refs/tags/v${version}" > /dev/null; then
+            echo "::error file=pubspec.yaml::Version ${version} is already released, bump the version in pubspec.yaml"
+            exit 1
+          fi
+
       - name: Validate package for pub.dev
         run: flutter pub publish --dry-run
 

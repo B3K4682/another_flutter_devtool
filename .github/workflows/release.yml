@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -17,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      actions: write
     concurrency:
       group: release
       cancel-in-progress: false
@@ -59,3 +61,9 @@ jobs:
             --target "${{ github.sha }}" \
             --title "${{ steps.version.outputs.tag }}" \
             --notes-file notes.md
+
+      - name: Trigger pub.dev publish
+        if: steps.tag.outputs.exists == 'false' || github.event_name == 'workflow_dispatch'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish.yml --ref "${{ steps.version.outputs.tag }}"

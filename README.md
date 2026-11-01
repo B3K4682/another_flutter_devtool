@@ -1,8 +1,11 @@
 # another_flutter_devtool
 
+[![pub package](https://img.shields.io/pub/v/another_flutter_devtool.svg)](https://pub.dev/packages/another_flutter_devtool)
+[![CI](https://github.com/B3K4682/another_flutter_devtool/actions/workflows/release.yml/badge.svg)](https://github.com/B3K4682/another_flutter_devtool/actions/workflows/release.yml)
+
 An in-app devtool for Flutter. Wrap your app, and a small draggable launcher button appears on top of it. Tap it to open a full-screen devtool panel without leaving the app.
 
-> **Early stage:** 0.5.0 ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section. More built-in tools are coming in future releases.
+> **Beta:** the package is usable today, but the API may change before 1.0. It ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section. More built-in tools are coming in future releases.
 
 ## Features
 
@@ -25,7 +28,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.5.0
+  another_flutter_devtool: ^0.5.2
 ```
 
 
@@ -196,7 +199,7 @@ await tester.tap(find.byKey(DevtoolKeys.closeButton));
 
 ## Example
 
-See the `[example](example)` folder for a runnable app and integration tests.
+See the [example](https://github.com/B3K4682/another_flutter_devtool/tree/main/example) folder for a runnable app and integration tests.
 
 ## Contributing
 
