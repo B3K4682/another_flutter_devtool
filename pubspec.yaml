@@ -1,6 +1,6 @@
 name: another_flutter_devtool
 description: "An in-app devtool for Flutter: a draggable launcher opens a panel with app info, a network inspector, data usage and route navigation tools."
-version: 0.5.2
+version: 0.5.3
 homepage: https://github.com/B3K4682/another_flutter_devtool
 repository: https://github.com/B3K4682/another_flutter_devtool
 issue_tracker: https://github.com/B3K4682/another_flutter_devtool/issues
@@ -10,6 +10,15 @@ topics:
   - network
   - developer-tools
   - inspector
+screenshots:
+  - description: Devtool home screen with the General, Network and a custom section.
+    path: screenshots/home.png
+  - description: General section with app information, internet data usage and configuration tools.
+    path: screenshots/general.png
+  - description: Network section listing HTTP calls with status filters and search.
+    path: screenshots/network.png
+  - description: Custom section with app-defined tools.
+    path: screenshots/custom_tools.png
 
 environment:
   sdk: ^3.13.4
