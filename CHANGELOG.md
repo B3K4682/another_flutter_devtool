@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.5.3
+
+Documentation update. No behavior changes.
+
+### Changed
+
+* Added screenshots of the home screen, the General and Network sections and a custom section to the README and the pub.dev page.
+
 ## 0.5.2
 
 First release on pub.dev. No behavior changes.

@@ -7,6 +7,10 @@ An in-app devtool for Flutter. Wrap your app, and a small draggable launcher but
 
 > **Beta:** the package is usable today, but the API may change before 1.0. It ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section. More built-in tools are coming in future releases.
 
+| Home | General | Network | Custom tools |
+| :---: | :---: | :---: | :---: |
+| <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/home.png" width="200" alt="Devtool home screen"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/general.png" width="200" alt="General section"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/network.png" width="200" alt="Network section"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/custom_tools.png" width="200" alt="Custom tools section"> |
+
 ## Features
 
 - Floating launcher button that can be dragged anywhere inside the safe area, with an optional app version badge.
@@ -28,7 +32,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.5.2
+  another_flutter_devtool: ^0.5.3
 ```
 
 
