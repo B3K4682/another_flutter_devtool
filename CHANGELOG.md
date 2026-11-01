@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.5.2
+
+First release on pub.dev. No behavior changes.
+
+### Changed
+
+* Added pub.dev topics, a more descriptive package description and a Flutter `>=3.47.0` constraint matching the Dart SDK constraint.
+* README now has pub.dev and CI badges, a beta notice and a working link to the example app.
+* Upgraded `device_info_plus` to ^13.3.0, `package_info_plus` to ^10.2.2 and `share_plus` to ^13.3.1.
+* Releases are now automated: merging a version bump to `main` creates the GitHub release and publishes to pub.dev.
+
 ## 0.5.1
 
 Code style update. No behavior changes.
