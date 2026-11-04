@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.5.4
+
+Adds the live API call overlay: watch the latest HTTP call on top of your app without opening the devtool.
+
+### Added
+
+* Live API call overlay for the Network section:
+  * A picture-in-picture toggle in the Network header shows the newest call as a floating card over the app, with its status, method, URL and duration, updated as requests happen.
+  * Drag the card anywhere inside the safe area. When it sits in the lower half of the screen, the dropdown opens upward.
+  * Tap the card for a dropdown with the full URL, status or error, start time, duration and request and response sizes.
+  * Open details opens the panel straight to that call's details page.
+  * The card is hidden while the panel is open. The on/off state is saved in the settings (`NetworkSection.showLastCallKey`).
+* Screenshots of the overlay in the README and on the pub.dev page, and a refreshed Network screenshot showing the new toggle.
+* `NetworkRecorder.latest`, which returns the most recent call.
+* `NetworkCallsPage.controller`, which shows the overlay toggle when set.
+* `DevtoolKeys` for the overlay and its toggle.
+
 ## 0.5.3
 
 Documentation update. No behavior changes.

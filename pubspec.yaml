@@ -1,6 +1,6 @@
 name: another_flutter_devtool
-description: "An in-app devtool for Flutter: a draggable launcher opens a panel with app info, a network inspector, data usage and route navigation tools."
-version: 0.5.3
+description: "An in-app devtool for Flutter: a draggable launcher opens a panel with app info, a network inspector with a floating live API call overlay, data usage and route tools."
+version: 0.5.4
 homepage: https://github.com/B3K4682/another_flutter_devtool
 repository: https://github.com/B3K4682/another_flutter_devtool
 issue_tracker: https://github.com/B3K4682/another_flutter_devtool/issues
@@ -11,6 +11,10 @@ topics:
   - developer-tools
   - inspector
 screenshots:
+  - description: Live API call overlay floating over the app with the latest HTTP call.
+    path: screenshots/last_call.png
+  - description: Live API call overlay tapped open, showing status, timing and sizes of the call.
+    path: screenshots/last_call_details.png
   - description: Devtool home screen with the General, Network and a custom section.
     path: screenshots/home.png
   - description: General section with app information, internet data usage and configuration tools.
