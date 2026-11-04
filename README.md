@@ -5,14 +5,30 @@
 
 An in-app devtool for Flutter. Wrap your app, and a small draggable launcher button appears on top of it. Tap it to open a full-screen devtool panel without leaving the app.
 
-> **Beta:** the package is usable today, but the API may change before 1.0. It ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section. More built-in tools are coming in future releases.
+> **Beta:** the package is usable today, but the API may change before 1.0. It ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section with its live API call overlay. More built-in tools are coming in future releases.
 
 | Home | General | Network | Custom tools |
 | :---: | :---: | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/home.png" width="200" alt="Devtool home screen"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/general.png" width="200" alt="General section"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/network.png" width="200" alt="Network section"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/custom_tools.png" width="200" alt="Custom tools section"> |
 
+## Live API call overlay
+
+Watch your API traffic while you use the app, without opening the devtool. Turn on the overlay from the Network
+header, and a small floating card stays on top of your app showing the latest call: status, method, URL and duration,
+updated as requests happen.
+
+| Floating card | Tapped open |
+| :---: | :---: |
+| <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/last_call.png" width="200" alt="Live API call overlay floating over the app"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/last_call_details.png" width="200" alt="Live API call overlay with its details dropdown open"> |
+
+- **Draggable:** move it anywhere on screen so it never covers what you are testing.
+- **Tap for details:** a dropdown shows the full URL, status or error, start time, duration and request and response sizes.
+- **Open details:** jump straight to the full request, response, headers and cURL for that call.
+- **One tap to turn off:** press the header button again. The choice is remembered across restarts.
+
 ## Features
 
+- Live API call overlay: a draggable floating card over your app with the latest HTTP call. Tap it for a quick summary or open the full details.
 - Floating launcher button that can be dragged anywhere inside the safe area, with an optional app version badge.
 - Full-screen panel that closes with the close button or the system back button.
 - App Information tool: app version and build number, device model, OS version, current flavor and startup time.
@@ -32,7 +48,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.5.3
+  another_flutter_devtool: ^0.5.4
 ```
 
 
@@ -103,6 +119,8 @@ const DevtoolConfig(
 - The list shows status, method, URL and duration, newest first. Filter it by URL, method or status
   (`post 404` matches both), or narrow it down with the 2xx / 3xx / 4xx / 5xx / Failed chips.
 - Tap a call for its query parameters, headers, bodies (JSON is pretty-printed) and error with stack trace.
+- The picture-in-picture button in the header turns on the [live API call overlay](#live-api-call-overlay). The
+  overlay is hidden while the devtool panel is open and comes back when you close it.
 - Export shares every recorded call (or a single call from its page) as a `.json` file. `Authorization`,
   `Proxy-Authorization`, `Cookie` and `Set-Cookie` values are masked in exports; change that with
   `NetworkSection(redactedHeaders: {...})`. Copy as cURL is not masked.
@@ -198,6 +216,9 @@ expect(find.byKey(DevtoolKeys.panel), findsOneWidget);
 
 await tester.tap(find.byKey(DevtoolKeys.closeButton));
 ```
+
+The overlay uses `DevtoolKeys.networkLastCallToggle`, `lastCallOverlay`, `lastCallOverlayDetails` and
+`lastCallOpenDetailsButton`.
 
 
 

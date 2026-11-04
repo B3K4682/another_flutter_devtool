@@ -14,6 +14,9 @@ class NetworkSection extends DevtoolSection {
 
   static const sectionId = 'network';
 
+  /// Settings key for the floating card showing the last call over the app.
+  static const showLastCallKey = 'another_flutter_devtool.network_show_last_call';
+
   final NetworkRecorder? _recorder;
 
   /// Header names (lowercase) masked in JSON exports.
@@ -23,9 +26,12 @@ class NetworkSection extends DevtoolSection {
   NetworkRecorder get recorder => _recorder ?? NetworkRecorder.instance;
 
   @override
-  Future<void> init(DevtoolController controller) async => recorder.install();
+  Future<void> init(DevtoolController controller) async {
+    controller.registerBoolSetting(showLastCallKey, defaultValue: false);
+    recorder.install();
+  }
 
   @override
   Widget buildPage(BuildContext context, DevtoolController controller) =>
-      NetworkCallsPage(recorder: recorder, redactedHeaders: redactedHeaders);
+      NetworkCallsPage(recorder: recorder, redactedHeaders: redactedHeaders, controller: controller);
 }

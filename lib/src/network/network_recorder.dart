@@ -40,6 +40,9 @@ class NetworkRecorder extends ChangeNotifier implements HttpCallObserver {
   /// Newest first.
   List<NetworkCall> get calls => _calls.reversed.toList(growable: false);
 
+  /// The most recent call, or null when nothing was recorded.
+  NetworkCall? get latest => _calls.lastOrNull;
+
   /// Hooks into HttpOverrides.global; safe to call more than once.
   void install() {
     if (_installed) return;

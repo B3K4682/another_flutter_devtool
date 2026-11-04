@@ -21,6 +21,10 @@ abstract final class DevtoolKeys {
   static const networkCallDetails = ValueKey('another_flutter_devtool.network_call_details');
   static const networkCopyCurlButton = ValueKey('another_flutter_devtool.network_copy_curl_button');
   static const networkExportCallButton = ValueKey('another_flutter_devtool.network_export_call_button');
+  static const networkLastCallToggle = ValueKey('another_flutter_devtool.network_last_call_toggle');
+  static const lastCallOverlay = ValueKey('another_flutter_devtool.last_call_overlay');
+  static const lastCallOverlayDetails = ValueKey('another_flutter_devtool.last_call_overlay_details');
+  static const lastCallOpenDetailsButton = ValueKey('another_flutter_devtool.last_call_open_details_button');
 
   /// [filter] is one of `all`, `2xx`, `3xx`, `4xx`, `5xx` or `failed`.
   static ValueKey<String> networkStatusFilter(String filter) =>

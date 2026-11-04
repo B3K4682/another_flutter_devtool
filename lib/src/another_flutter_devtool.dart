@@ -5,7 +5,11 @@ import 'core/devtool_controller.dart';
 import 'core/devtool_scope.dart';
 import 'core/devtool_storage.dart';
 import 'launcher/draggable_launcher.dart';
+import 'network/last_call_overlay.dart';
+import 'network/network_call.dart';
+import 'network/network_call_details_page.dart';
 import 'panel/devtool_panel.dart';
+import 'sections/network_section.dart';
 import 'theme/devtool_theme.dart';
 import 'tools/app_info/app_info_state.dart';
 import 'tools/app_info/app_info_tool.dart';
@@ -29,7 +33,9 @@ class AnotherFlutterDevtool extends StatefulWidget {
 class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
   late final bool _launcherVisible = widget.config.launcher.initiallyVisible;
   late final DevtoolController _controller;
+  final _panelNavigatorKey = GlobalKey<NavigatorState>();
   Offset? _launcherOffset;
+  Offset? _lastCallOffset;
 
   @override
   void initState() {
@@ -65,16 +71,27 @@ class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
             builder: (context, _) {
               final panelOpen = _controller.isPanelOpen;
               final showLauncher = widget.config.launcher.enabled && _launcherVisible && !panelOpen;
+              final networkSection = _networkSection;
+              final showLastCall =
+                  !panelOpen && networkSection != null && _controller.boolSetting(NetworkSection.showLastCallKey);
               return Stack(
                 children: [
                   Positioned.fill(child: widget.child),
                   if (panelOpen)
                     Positioned.fill(
                       child: MaterialApp(
+                        navigatorKey: _panelNavigatorKey,
                         debugShowCheckedModeBanner: false,
                         theme: DevtoolTheme.dark(),
                         home: DevtoolPanel(onClose: _controller.closePanel),
                       ),
+                    ),
+                  if (showLastCall)
+                    LastCallOverlay(
+                      recorder: networkSection.recorder,
+                      offset: _lastCallOffset,
+                      onMoved: (offset) => setState(() => _lastCallOffset = offset),
+                      onOpenDetails: (call) => _openCallDetails(networkSection, call),
                     ),
                   if (showLauncher)
                     DraggableLauncher(
@@ -90,6 +107,27 @@ class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
         ),
       ),
     );
+  }
+
+  NetworkSection? get _networkSection => _controller.sections.whereType<NetworkSection>().firstOrNull;
+
+  void _openCallDetails(NetworkSection section, NetworkCall call) {
+    _controller.openPanel();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final navigator = _panelNavigatorKey.currentState;
+      if (navigator == null) return;
+      navigator
+        ..push(MaterialPageRoute<void>(builder: (context) => section.buildPage(context, _controller)))
+        ..push(
+          MaterialPageRoute<void>(
+            builder: (_) => NetworkCallDetailsPage(
+              recorder: section.recorder,
+              call: call,
+              redactedHeaders: section.redactedHeaders,
+            ),
+          ),
+        );
+    });
   }
 
   String? get _versionLabel {

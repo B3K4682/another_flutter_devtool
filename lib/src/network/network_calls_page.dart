@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../core/devtool_controller.dart';
 import '../keys.dart';
+import '../sections/network_section.dart';
 import '../theme/devtool_theme.dart';
 import 'network_call.dart';
 import 'network_call_details_page.dart';
@@ -29,10 +31,18 @@ enum _StatusFilter {
 
 /// Every recorded call, newest first, with search and status filters.
 class NetworkCallsPage extends StatefulWidget {
-  const NetworkCallsPage({super.key, required this.recorder, this.redactedHeaders = defaultRedactedHeaders});
+  const NetworkCallsPage({
+    super.key,
+    required this.recorder,
+    this.redactedHeaders = defaultRedactedHeaders,
+    this.controller,
+  });
 
   final NetworkRecorder recorder;
   final Set<String> redactedHeaders;
+
+  /// Enables the last call overlay toggle when set.
+  final DevtoolController? controller;
 
   @override
   State<NetworkCallsPage> createState() => _NetworkCallsPageState();
@@ -90,10 +100,12 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = widget.controller;
     return ListenableBuilder(
-      listenable: _recorder,
+      listenable: Listenable.merge([_recorder, ?controller]),
       builder: (context, _) {
         final calls = _recorder.calls;
+        final showLastCall = controller?.boolSetting(NetworkSection.showLastCallKey) ?? false;
         final searched = calls.where(_matchesSearch).toList(growable: false);
         final visible = searched.where(_filter.matches).toList(growable: false);
         final filtering = visible.length != calls.length;
@@ -103,6 +115,19 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
           appBar: AppBar(
             title: const Text('Network'),
             actions: [
+              if (controller != null)
+                IconButton(
+                  key: DevtoolKeys.networkLastCallToggle,
+                  tooltip: showLastCall ? 'Hide last call overlay' : 'Show last call overlay',
+                  isSelected: showLastCall,
+                  icon: const Icon(Icons.picture_in_picture_alt_outlined, size: 20),
+                  selectedIcon: const Icon(
+                    Icons.picture_in_picture_alt_rounded,
+                    size: 20,
+                    color: DevtoolColors.primary,
+                  ),
+                  onPressed: () => controller.setBoolSetting(NetworkSection.showLastCallKey, !showLastCall),
+                ),
               IconButton(
                 key: DevtoolKeys.networkPauseButton,
                 tooltip: _recorder.isPaused ? 'Resume recording' : 'Pause recording',

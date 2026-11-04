@@ -25,7 +25,7 @@ NetworkCall _call(int id, String method, String url, {int? status, Object? error
   stackTrace: error == null ? null : StackTrace.current,
 );
 
-Future<NetworkRecorder> _pumpNetwork(WidgetTester tester) async {
+Future<NetworkRecorder> _pumpNetwork(WidgetTester tester, {DevtoolStorage? storage}) async {
   final recorder = NetworkRecorder(notifyInterval: Duration.zero);
   addTearDown(recorder.dispose);
   recorder
@@ -41,6 +41,7 @@ Future<NetworkRecorder> _pumpNetwork(WidgetTester tester) async {
       testGeneralSection,
       NetworkSection(recorder: recorder),
     ],
+    storage: storage,
   );
   await openPanel(tester);
   await openSection(tester, NetworkSection.sectionId);
@@ -48,6 +49,15 @@ Future<NetworkRecorder> _pumpNetwork(WidgetTester tester) async {
 }
 
 String _countText(WidgetTester tester) => tester.widget<Text>(find.byKey(DevtoolKeys.networkCallCount)).data!;
+
+Future<void> _toggleLastCallAndClose(WidgetTester tester) async {
+  await tester.tap(find.byKey(DevtoolKeys.networkLastCallToggle));
+  await tester.pumpAndSettle();
+  await closePanel(tester);
+}
+
+final _overlay = find.byKey(DevtoolKeys.lastCallOverlay);
+final _overlayRow = find.descendant(of: _overlay, matching: find.text('down.example.com/'));
 
 void main() {
   testWidgets('lists calls with status, method, url and duration', (tester) async {
@@ -141,5 +151,83 @@ void main() {
 
     expect(find.text('SocketException: Connection refused'), findsOneWidget);
     expect(find.text('STACK TRACE'), findsOneWidget);
+  });
+
+  group('last call overlay', () {
+    testWidgets('is off by default and shows the newest call once toggled', (tester) async {
+      final recorder = await _pumpNetwork(tester);
+      await closePanel(tester);
+      expect(_overlay, findsNothing);
+
+      await openPanel(tester);
+      await openSection(tester, NetworkSection.sectionId);
+      await _toggleLastCallAndClose(tester);
+      expect(_overlayRow, findsOneWidget);
+
+      recorder.add(_call(6, 'PUT', 'https://api.example.com/moons', status: 204));
+      await tester.pumpAndSettle();
+      expect(find.descendant(of: _overlay, matching: find.text('api.example.com/moons')), findsOneWidget);
+    });
+
+    testWidgets('expands and collapses its details on tap', (tester) async {
+      await _pumpNetwork(tester);
+      await _toggleLastCallAndClose(tester);
+      expect(find.byKey(DevtoolKeys.lastCallOverlayDetails), findsNothing);
+
+      await tester.tap(_overlayRow);
+      await tester.pumpAndSettle();
+      expect(find.byKey(DevtoolKeys.lastCallOverlayDetails), findsOneWidget);
+      expect(find.text('SocketException: Connection refused'), findsOneWidget);
+
+      await tester.tap(_overlayRow);
+      await tester.pumpAndSettle();
+      expect(find.byKey(DevtoolKeys.lastCallOverlayDetails), findsNothing);
+    });
+
+    testWidgets('can be dragged and stays inside the screen', (tester) async {
+      await _pumpNetwork(tester);
+      await _toggleLastCallAndClose(tester);
+      expect(tester.getTopLeft(_overlay), const Offset(20, 740));
+
+      await tester.drag(_overlayRow, const Offset(-100, -300));
+      await tester.pumpAndSettle();
+      expect(tester.getTopLeft(_overlay), const Offset(0, 440));
+      expect(find.byKey(DevtoolKeys.lastCallOverlayDetails), findsNothing);
+    });
+
+    testWidgets('opens the call details in the panel', (tester) async {
+      await _pumpNetwork(tester);
+      await _toggleLastCallAndClose(tester);
+
+      await tester.tap(_overlayRow);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(DevtoolKeys.lastCallOpenDetailsButton));
+      await tester.pumpAndSettle();
+
+      expect(_overlay, findsNothing);
+      expect(find.byKey(DevtoolKeys.networkCallDetails), findsOneWidget);
+      expect(find.text('STACK TRACE'), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byKey(DevtoolKeys.networkCallsPage), findsOneWidget);
+    });
+
+    testWidgets('turns off from the header and remembers the setting', (tester) async {
+      final storage = InMemoryDevtoolStorage();
+      await _pumpNetwork(tester, storage: storage);
+      await _toggleLastCallAndClose(tester);
+      expect(_overlay, findsOneWidget);
+
+      await tester.pumpWidget(const SizedBox());
+      await _pumpNetwork(tester, storage: storage);
+      await closePanel(tester);
+      expect(_overlay, findsOneWidget);
+
+      await openPanel(tester);
+      await openSection(tester, NetworkSection.sectionId);
+      await _toggleLastCallAndClose(tester);
+      expect(_overlay, findsNothing);
+    });
   });
 }
