@@ -9,6 +9,7 @@ import 'network_call_details_page.dart';
 import 'network_export.dart';
 import 'network_format.dart';
 import 'network_recorder.dart';
+import 'network_redaction.dart';
 import 'network_share.dart';
 import 'network_status_pill.dart';
 
@@ -35,11 +36,13 @@ class NetworkCallsPage extends StatefulWidget {
     super.key,
     required this.recorder,
     this.redactedHeaders = defaultRedactedHeaders,
+    this.redactedQueryParameters = defaultRedactedQueryParameters,
     this.controller,
   });
 
   final NetworkRecorder recorder;
   final Set<String> redactedHeaders;
+  final Set<String> redactedQueryParameters;
 
   /// Enables the last call overlay toggle when set.
   final DevtoolController? controller;
@@ -88,13 +91,22 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
 
   Future<void> _export(BuildContext buttonContext) => shareJson(
     buttonContext,
-    json: exportCallsJson(_recorder.calls, redactedHeaders: widget.redactedHeaders),
+    json: exportCallsJson(
+      _recorder.calls,
+      redactedHeaders: widget.redactedHeaders,
+      redactedQueryParameters: widget.redactedQueryParameters,
+    ),
     fileName: callsFileName(DateTime.now()),
   );
 
   void _open(NetworkCall call) => Navigator.of(context).push(
     MaterialPageRoute<void>(
-      builder: (_) => NetworkCallDetailsPage(recorder: _recorder, call: call, redactedHeaders: widget.redactedHeaders),
+      builder: (_) => NetworkCallDetailsPage(
+        recorder: _recorder,
+        call: call,
+        redactedHeaders: widget.redactedHeaders,
+        redactedQueryParameters: widget.redactedQueryParameters,
+      ),
     ),
   );
 
@@ -195,7 +207,11 @@ class _NetworkCallsPageState extends State<NetworkCallsPage> {
                         separatorBuilder: (_, _) => const Divider(height: 1, indent: DevtoolSpacing.padding),
                         itemBuilder: (context, index) {
                           final call = visible[index];
-                          return _CallRow(call: call, onTap: () => _open(call));
+                          return _CallRow(
+                            call: call,
+                            url: redactUrl(call.uri, widget.redactedQueryParameters),
+                            onTap: () => _open(call),
+                          );
                         },
                       ),
               ),
@@ -380,9 +396,10 @@ class _PausedTag extends StatelessWidget {
 }
 
 class _CallRow extends StatelessWidget {
-  const _CallRow({required this.call, required this.onTap});
+  const _CallRow({required this.call, required this.url, required this.onTap});
 
   final NetworkCall call;
+  final String url;
   final VoidCallback onTap;
 
   @override
@@ -412,7 +429,7 @@ class _CallRow extends StatelessWidget {
             ),
             Expanded(
               child: Text(
-                displayUrl(call.uri),
+                displayUrl(url),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: theme.textTheme.bodyMedium,

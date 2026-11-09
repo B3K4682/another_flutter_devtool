@@ -56,6 +56,29 @@ void main() {
     expect(request['headers'], containsPair('authorization', 'Bearer secret'));
   });
 
+  test('masks sensitive query parameters in the url and query', () {
+    final call = NetworkCall(
+      id: 1,
+      method: 'GET',
+      uri: Uri.parse('https://api.example.com/me?Access_Token=abc&page=2&access_token=def'),
+      startedAt: DateTime(2026),
+    );
+    final json = jsonDecode(exportCallJson(call)) as Map<String, Object?>;
+
+    expect(json['url'], 'https://api.example.com/me?Access_Token=[redacted]&page=2&access_token=[redacted]');
+    final request = json['request']! as Map<String, Object?>;
+    expect(request['query'], {'Access_Token': '[redacted]', 'page': '2', 'access_token': '[redacted]'});
+  });
+
+  test('redactUrl keeps urls without sensitive parameters unchanged', () {
+    final uri = Uri.parse('https://api.example.com/posts?tag=a%20b#top');
+    expect(redactUrl(uri, defaultRedactedQueryParameters), uri.toString());
+    expect(
+      redactUrl(Uri.parse('https://x.dev/a?token=1#top'), defaultRedactedQueryParameters),
+      'https://x.dev/a?token=[redacted]#top',
+    );
+  });
+
   test('builds a cURL command', () {
     expect(
       toCurl(_call()),

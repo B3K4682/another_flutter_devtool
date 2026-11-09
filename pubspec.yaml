@@ -1,6 +1,6 @@
 name: another_flutter_devtool
 description: "An in-app devtool for Flutter: a draggable launcher opens a panel with app info, a network inspector with a floating live API call overlay, data usage and route tools."
-version: 0.5.4
+version: 0.5.5
 homepage: https://github.com/B3K4682/another_flutter_devtool
 repository: https://github.com/B3K4682/another_flutter_devtool
 issue_tracker: https://github.com/B3K4682/another_flutter_devtool/issues

@@ -143,6 +143,58 @@ void main() {
     expect(find.text('cURL copied'), findsOneWidget);
   });
 
+  testWidgets('masks sensitive headers and query parameters until revealed', (tester) async {
+    final recorder = await _pumpNetwork(tester);
+    recorder.add(
+      NetworkCall(
+        id: 9,
+        method: 'GET',
+        uri: Uri.parse('https://api.example.com/me?access_token=abc123'),
+        startedAt: DateTime(2026),
+        state: NetworkCallState.completed,
+        requestHeaders: const {
+          'authorization': ['Bearer secret'],
+        },
+        statusCode: 200,
+        responseHeaders: const {
+          'set-cookie': ['session=xyz'],
+        },
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('api.example.com/me?access_token=[redacted]'), findsOneWidget);
+    expect(find.textContaining('abc123'), findsNothing);
+
+    await tester.tap(find.byKey(DevtoolKeys.networkCallRow(9)));
+    await tester.pumpAndSettle();
+    expect(find.text('https://api.example.com/me?access_token=[redacted]'), findsOneWidget);
+    expect(find.text('[redacted]'), findsNWidgets(2));
+    expect(find.text('Bearer secret'), findsNothing);
+    expect(find.textContaining('abc123'), findsNothing);
+
+    await tester.tap(find.byKey(DevtoolKeys.networkRevealSecretsButton));
+    await tester.pumpAndSettle();
+    expect(find.text('Bearer secret'), findsOneWidget);
+    expect(find.text('abc123'), findsOneWidget);
+    expect(find.text('https://api.example.com/me?access_token=abc123'), findsOneWidget);
+
+    await tester.tap(find.text('Response'));
+    await tester.pumpAndSettle();
+    expect(find.text('session=xyz'), findsOneWidget);
+
+    await tester.tap(find.byKey(DevtoolKeys.networkRevealSecretsButton));
+    await tester.pumpAndSettle();
+    expect(find.text('session=xyz'), findsNothing);
+  });
+
+  testWidgets('hides the reveal button when nothing is masked', (tester) async {
+    await _pumpNetwork(tester);
+    await tester.tap(find.byKey(DevtoolKeys.networkCallRow(1)));
+    await tester.pumpAndSettle();
+    expect(find.byKey(DevtoolKeys.networkRevealSecretsButton), findsNothing);
+  });
+
   testWidgets('opens failed calls on the error tab', (tester) async {
     await _pumpNetwork(tester);
 

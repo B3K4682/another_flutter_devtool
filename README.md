@@ -5,7 +5,7 @@
 
 An in-app devtool for Flutter. Wrap your app, and a small draggable launcher button appears on top of it. Tap it to open a full-screen devtool panel without leaving the app.
 
-> **Beta:** the package is usable today, but the API may change before 1.0. It ships the launcher, the panel, the App Information, Internet Data Usage and Configuration tools, and the Network section with its live API call overlay. More built-in tools are coming in future releases.
+> **Beta:** usable today, but the API may change before 1.0. More built-in tools are coming.
 
 | Home | General | Network | Custom tools |
 | :---: | :---: | :---: | :---: |
@@ -13,45 +13,33 @@ An in-app devtool for Flutter. Wrap your app, and a small draggable launcher but
 
 ## Live API call overlay
 
-Watch your API traffic while you use the app, without opening the devtool. Turn on the overlay from the Network
-header, and a small floating card stays on top of your app showing the latest call: status, method, URL and duration,
-updated as requests happen.
+Watch your API traffic without opening the devtool. Turn it on from the Network header, and a floating card shows
+the latest call's status, method, URL and duration as requests happen.
 
 | Floating card | Tapped open |
 | :---: | :---: |
 | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/last_call.png" width="200" alt="Live API call overlay floating over the app"> | <img src="https://raw.githubusercontent.com/B3K4682/another_flutter_devtool/main/screenshots/last_call_details.png" width="200" alt="Live API call overlay with its details dropdown open"> |
 
-- **Draggable:** move it anywhere on screen so it never covers what you are testing.
-- **Tap for details:** a dropdown shows the full URL, status or error, start time, duration and request and response sizes.
-- **Open details:** jump straight to the full request, response, headers and cURL for that call.
-- **One tap to turn off:** press the header button again. The choice is remembered across restarts.
+Drag it anywhere, tap it for the full URL, timing and sizes, or open the call's full details. The on/off choice is
+remembered across restarts.
 
 ## Features
 
-- Live API call overlay: a draggable floating card over your app with the latest HTTP call. Tap it for a quick summary or open the full details.
-- Floating launcher button that can be dragged anywhere inside the safe area, with an optional app version badge.
-- Full-screen panel that closes with the close button or the system back button.
-- App Information tool: app version and build number, device model, OS version, current flavor and startup time.
-- Internet Data Usage tool: data received, sent and total, request count and top hosts since launch. Works with Dio and `http` with no setup.
-- Network section: every HTTP call with its request, response and error. Search, filter by status, pause recording, export everything or a single call as JSON, and copy a call as cURL. Works with Dio and `http` with no setup.
-- Configuration tool: type a route like `/example` to close the devtool and jump straight to that screen. Works with any router.
-- Extensible: write your own section and tool, and it shows up alongside the built-in ones.
-- Fully isolated from your app: the panel has its own `MaterialApp` and theme, and your app keeps working underneath.
-- Turned off by default, so it is easy to keep out of release builds.
-- Stable widget keys for testing.
-
-
+- Draggable launcher button with an optional app version badge, opening a full-screen panel.
+- App Information: version, build, device, OS, flavor and startup time.
+- Internet Data Usage: data sent and received, request count and top hosts since launch.
+- Network: every HTTP call with request, response and error; search, status filters, JSON export and Copy as cURL.
+  Sensitive headers and tokens are masked by default. Works with Dio and `http` with no setup.
+- Configuration: type a route to jump straight to that screen. Works with any router.
+- Extensible with your own sections and tools.
+- Isolated from your app (own `MaterialApp` and theme), off by default, with stable widget keys for testing.
 
 ## Getting started
 
-Add the package to your `pubspec.yaml`:
-
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.5.4
+  another_flutter_devtool: ^0.5.5
 ```
-
-
 
 ## Usage
 
@@ -116,16 +104,13 @@ const DevtoolConfig(
 );
 ```
 
-- The list shows status, method, URL and duration, newest first. Filter it by URL, method or status
-  (`post 404` matches both), or narrow it down with the 2xx / 3xx / 4xx / 5xx / Failed chips.
-- Tap a call for its query parameters, headers, bodies (JSON is pretty-printed) and error with stack trace.
-- The picture-in-picture button in the header turns on the [live API call overlay](#live-api-call-overlay). The
-  overlay is hidden while the devtool panel is open and comes back when you close it.
-- Export shares every recorded call (or a single call from its page) as a `.json` file. `Authorization`,
-  `Proxy-Authorization`, `Cookie` and `Set-Cookie` values are masked in exports; change that with
-  `NetworkSection(redactedHeaders: {...})`. Copy as cURL is not masked.
-- The last 500 calls are kept, bodies are capped at 256 KB, and binary bodies such as images are not stored.
-  Pass `NetworkSection(recorder: NetworkRecorder(maxCalls: 1000))` to change the limits.
+- Search by URL, method or status (`post 404` matches both), or use the 2xx / 3xx / 4xx / 5xx / Failed chips.
+- Tap a call for its query parameters, headers, bodies and error with stack trace.
+- **Sensitive values are masked** as `[redacted]` on screen and in exports, so screenshots are safe to share:
+  `Authorization`, cookies, API-key headers and token query parameters like `access_token`. The eye button on a
+  call reveals them; Copy as cURL is never masked. Bodies are not masked. Customise with
+  `NetworkSection(redactedHeaders: {...defaultRedactedHeaders, 'x-my-secret'}, redactedQueryParameters: {...})`.
+- Keeps the last 500 calls and caps bodies at 256 KB; change with `NetworkSection(recorder: NetworkRecorder(maxCalls: 1000))`.
 
 ### Configuration
 
@@ -139,8 +124,6 @@ const DevtoolConfig(
   sections: [GeneralSection()], // cards on the devtool home screen
 );
 ```
-
-
 
 ### Sections and tools
 
@@ -216,11 +199,6 @@ expect(find.byKey(DevtoolKeys.panel), findsOneWidget);
 
 await tester.tap(find.byKey(DevtoolKeys.closeButton));
 ```
-
-The overlay uses `DevtoolKeys.networkLastCallToggle`, `lastCallOverlay`, `lastCallOverlayDetails` and
-`lastCallOpenDetailsButton`.
-
-
 
 ## Example
 
