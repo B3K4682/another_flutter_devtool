@@ -92,6 +92,7 @@ class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
                       offset: _lastCallOffset,
                       onMoved: (offset) => setState(() => _lastCallOffset = offset),
                       onOpenDetails: (call) => _openCallDetails(networkSection, call),
+                      redactedQueryParameters: networkSection.redactedQueryParameters,
                     ),
                   if (showLauncher)
                     DraggableLauncher(
@@ -124,6 +125,7 @@ class _AnotherFlutterDevtoolState extends State<AnotherFlutterDevtool> {
               recorder: section.recorder,
               call: call,
               redactedHeaders: section.redactedHeaders,
+              redactedQueryParameters: section.redactedQueryParameters,
             ),
           ),
         );

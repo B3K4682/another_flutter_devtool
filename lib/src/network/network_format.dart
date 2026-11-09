@@ -26,10 +26,9 @@ Color statusColor(NetworkStatusGroup group) => switch (group) {
 };
 
 /// Host, port and path with query, without the scheme.
-String displayUrl(Uri uri) {
-  final text = uri.toString();
-  final scheme = text.indexOf('://');
-  return scheme == -1 ? text : text.substring(scheme + 3);
+String displayUrl(String url) {
+  final scheme = url.indexOf('://');
+  return scheme == -1 ? url : url.substring(scheme + 3);
 }
 
 /// Monospace text style for URLs, headers and bodies.

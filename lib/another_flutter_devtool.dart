@@ -10,10 +10,11 @@ export 'src/core/devtool_tools_registry.dart';
 export 'src/core/http/http_call_observer.dart';
 export 'src/keys.dart';
 export 'src/network/network_call.dart' hide NetworkCallRecording;
-export 'src/network/network_export.dart'
-    show defaultRedactedHeaders, exportCallJson, exportCallsJson, networkCallToJson, toCurl;
+export 'src/network/network_export.dart' show exportCallJson, exportCallsJson, networkCallToJson, toCurl;
 export 'src/network/network_format.dart' show formatDuration;
 export 'src/network/network_recorder.dart';
+export 'src/network/network_redaction.dart'
+    show defaultRedactedHeaders, defaultRedactedQueryParameters, redactUrl, redactValues, redactedValue;
 export 'src/sections/general_section.dart';
 export 'src/sections/network_section.dart';
 export 'src/theme/devtool_theme.dart';

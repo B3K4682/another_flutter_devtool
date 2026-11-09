@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.5.5
+
+Masks sensitive network values on screen, not only in exports, so screenshots of the Network section are safe to share.
+
+### Added
+
+* Sensitive headers and query parameters are shown as `[redacted]` in the call list, the details page and the live API call overlay.
+* An eye button on the details page reveals them until you leave the page. It only appears when the call has masked values.
+* `NetworkSection.redactedQueryParameters` and `defaultRedactedQueryParameters` (`access_token`, `token`, `api_key`, `client_secret`, `password`, AWS presigned URL parameters and more), applied to the URL and query in JSON exports too.
+* `redactUrl`, `redactValues` and `redactedValue` for custom tools.
+
+### Changed
+
+* `defaultRedactedHeaders` now also covers `X-Api-Key`, `X-Auth-Token`, `X-Access-Token`, `X-Refresh-Token`, `X-CSRF-Token`, `X-XSRF-Token` and `X-Amz-Security-Token`.
+* `redactedHeaders` now applies on screen as well as in exports.
+
 ## 0.5.4
 
 Adds the live API call overlay: watch the latest HTTP call on top of your app without opening the devtool.

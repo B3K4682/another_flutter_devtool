@@ -9,6 +9,7 @@ import '../tools/network_usage/byte_format.dart';
 import 'network_call.dart';
 import 'network_format.dart';
 import 'network_recorder.dart';
+import 'network_redaction.dart';
 import 'network_status_pill.dart';
 
 /// Floating card over the app showing the newest recorded call; drag to move, tap to expand.
@@ -19,6 +20,7 @@ class LastCallOverlay extends StatefulWidget {
     required this.offset,
     required this.onMoved,
     required this.onOpenDetails,
+    this.redactedQueryParameters = defaultRedactedQueryParameters,
   });
 
   static const double maxWidth = 360;
@@ -31,6 +33,7 @@ class LastCallOverlay extends StatefulWidget {
   final Offset? offset;
   final ValueChanged<Offset> onMoved;
   final ValueChanged<NetworkCall> onOpenDetails;
+  final Set<String> redactedQueryParameters;
 
   @override
   State<LastCallOverlay> createState() => _LastCallOverlayState();
@@ -103,13 +106,19 @@ class _LastCallOverlayState extends State<LastCallOverlay> {
   }
 
   Widget _buildCard(NetworkCall? call, bool opensUpward) {
-    final row = _SummaryRow(call: call, expanded: _expanded, onTap: () => setState(() => _expanded = !_expanded));
+    final url = call == null ? '' : redactUrl(call.uri, widget.redactedQueryParameters);
+    final row = _SummaryRow(
+      call: call,
+      url: url,
+      expanded: _expanded,
+      onTap: () => setState(() => _expanded = !_expanded),
+    );
     final details = AnimatedSize(
       duration: const Duration(milliseconds: 180),
       curve: Curves.easeOut,
       alignment: opensUpward ? Alignment.bottomCenter : Alignment.topCenter,
       child: _expanded && call != null
-          ? _Details(call: call, onOpen: () => widget.onOpenDetails(call))
+          ? _Details(call: call, url: url, onOpen: () => widget.onOpenDetails(call))
           : const SizedBox(width: double.infinity),
     );
 
@@ -125,9 +134,10 @@ class _LastCallOverlayState extends State<LastCallOverlay> {
 }
 
 class _SummaryRow extends StatelessWidget {
-  const _SummaryRow({required this.call, required this.expanded, required this.onTap});
+  const _SummaryRow({required this.call, required this.url, required this.expanded, required this.onTap});
 
   final NetworkCall? call;
+  final String url;
   final bool expanded;
   final VoidCallback onTap;
 
@@ -160,7 +170,7 @@ class _SummaryRow extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        displayUrl(call.uri),
+                        displayUrl(url),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium,
@@ -185,9 +195,10 @@ class _SummaryRow extends StatelessWidget {
 }
 
 class _Details extends StatelessWidget {
-  const _Details({required this.call, required this.onOpen});
+  const _Details({required this.call, required this.url, required this.onOpen});
 
   final NetworkCall call;
+  final String url;
   final VoidCallback onOpen;
 
   @override
@@ -210,7 +221,7 @@ class _Details extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(call.uri.toString(), maxLines: 3, overflow: TextOverflow.ellipsis, style: monoStyle),
+          Text(url, maxLines: 3, overflow: TextOverflow.ellipsis, style: monoStyle),
           const SizedBox(height: 8),
           _DetailRow(label: 'Status', value: status, color: statusColor(call.statusGroup)),
           _DetailRow(label: 'Started', value: formatTime(call.startedAt)),

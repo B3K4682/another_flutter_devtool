@@ -3,14 +3,17 @@ import 'package:flutter/material.dart';
 import '../core/devtool_controller.dart';
 import '../core/devtool_tool.dart';
 import '../network/network_calls_page.dart';
-import '../network/network_export.dart';
 import '../network/network_recorder.dart';
+import '../network/network_redaction.dart';
 
 /// Records every HTTP call (Dio, http and other dart:io clients) and lists them.
 /// Not available on web.
 class NetworkSection extends DevtoolSection {
-  const NetworkSection({this._recorder, this.redactedHeaders = defaultRedactedHeaders})
-    : super(id: sectionId, title: 'Network', icon: Icons.lan_outlined);
+  const NetworkSection({
+    this._recorder,
+    this.redactedHeaders = defaultRedactedHeaders,
+    this.redactedQueryParameters = defaultRedactedQueryParameters,
+  }) : super(id: sectionId, title: 'Network', icon: Icons.lan_outlined);
 
   static const sectionId = 'network';
 
@@ -19,8 +22,11 @@ class NetworkSection extends DevtoolSection {
 
   final NetworkRecorder? _recorder;
 
-  /// Header names (lowercase) masked in JSON exports.
+  /// Header names (lowercase) masked on screen and in JSON exports.
   final Set<String> redactedHeaders;
+
+  /// Query parameter names (lowercase) masked on screen and in JSON exports.
+  final Set<String> redactedQueryParameters;
 
   /// Defaults to [NetworkRecorder.instance].
   NetworkRecorder get recorder => _recorder ?? NetworkRecorder.instance;
@@ -32,6 +38,10 @@ class NetworkSection extends DevtoolSection {
   }
 
   @override
-  Widget buildPage(BuildContext context, DevtoolController controller) =>
-      NetworkCallsPage(recorder: recorder, redactedHeaders: redactedHeaders, controller: controller);
+  Widget buildPage(BuildContext context, DevtoolController controller) => NetworkCallsPage(
+    recorder: recorder,
+    redactedHeaders: redactedHeaders,
+    redactedQueryParameters: redactedQueryParameters,
+    controller: controller,
+  );
 }

@@ -8,21 +8,42 @@ import 'network_call.dart';
 import 'network_export.dart';
 import 'network_format.dart';
 import 'network_recorder.dart';
+import 'network_redaction.dart';
 import 'network_share.dart';
 import 'network_status_pill.dart';
 
 /// Request, response and error of a single [NetworkCall]; updates live while pending.
-class NetworkCallDetailsPage extends StatelessWidget {
+/// Sensitive headers and query parameters are masked until revealed from the app bar.
+class NetworkCallDetailsPage extends StatefulWidget {
   const NetworkCallDetailsPage({
     super.key,
     required this.recorder,
     required this.call,
     this.redactedHeaders = defaultRedactedHeaders,
+    this.redactedQueryParameters = defaultRedactedQueryParameters,
   });
 
   final NetworkRecorder recorder;
   final NetworkCall call;
   final Set<String> redactedHeaders;
+  final Set<String> redactedQueryParameters;
+
+  @override
+  State<NetworkCallDetailsPage> createState() => _NetworkCallDetailsPageState();
+}
+
+class _NetworkCallDetailsPageState extends State<NetworkCallDetailsPage> {
+  bool _revealed = false;
+
+  NetworkCall get call => widget.call;
+
+  bool get _hasSecrets =>
+      call.queryParameters.keys.any((name) => isRedacted(name, widget.redactedQueryParameters)) ||
+      call.requestHeaders.keys.any((name) => isRedacted(name, widget.redactedHeaders)) ||
+      call.responseHeaders.keys.any((name) => isRedacted(name, widget.redactedHeaders));
+
+  Map<String, List<String>> _headers(Map<String, List<String>> headers) =>
+      _revealed ? headers : redactValues(headers, widget.redactedHeaders);
 
   Future<void> _copyCurl(BuildContext context) async {
     final messenger = ScaffoldMessenger.of(context);
@@ -35,10 +56,15 @@ class NetworkCallDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListenableBuilder(
-      listenable: recorder,
+      listenable: widget.recorder,
       builder: (context, _) {
         final hasError = call.error != null;
         final tabCount = hasError ? 3 : 2;
+        final hasSecrets = _hasSecrets;
+        final query = _revealed
+            ? call.queryParameters
+            : redactValues(call.queryParameters, widget.redactedQueryParameters);
+        final url = _revealed ? call.uri.toString() : redactUrl(call.uri, widget.redactedQueryParameters);
 
         return DefaultTabController(
           key: ValueKey(tabCount),
@@ -49,6 +75,15 @@ class NetworkCallDetailsPage extends StatelessWidget {
             appBar: AppBar(
               title: const Text('Call'),
               actions: [
+                if (hasSecrets)
+                  IconButton(
+                    key: DevtoolKeys.networkRevealSecretsButton,
+                    tooltip: _revealed ? 'Hide sensitive values' : 'Show sensitive values',
+                    isSelected: _revealed,
+                    icon: const Icon(Icons.visibility_off_outlined, size: 20),
+                    selectedIcon: const Icon(Icons.visibility_outlined, size: 20, color: DevtoolColors.warning),
+                    onPressed: () => setState(() => _revealed = !_revealed),
+                  ),
                 IconButton(
                   key: DevtoolKeys.networkCopyCurlButton,
                   tooltip: 'Copy as cURL',
@@ -62,7 +97,11 @@ class NetworkCallDetailsPage extends StatelessWidget {
                     icon: const Icon(Icons.ios_share_rounded, size: 20),
                     onPressed: () => shareJson(
                       buttonContext,
-                      json: exportCallJson(call, redactedHeaders: redactedHeaders),
+                      json: exportCallJson(
+                        call,
+                        redactedHeaders: widget.redactedHeaders,
+                        redactedQueryParameters: widget.redactedQueryParameters,
+                      ),
                       fileName: callFileName(call),
                     ),
                   ),
@@ -73,7 +112,7 @@ class NetworkCallDetailsPage extends StatelessWidget {
             body: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _Summary(call: call),
+                _Summary(call: call, url: url),
                 TabBar(
                   tabs: [
                     const Tab(text: 'Request', height: 42),
@@ -95,8 +134,17 @@ class NetworkCallDetailsPage extends StatelessWidget {
                 Expanded(
                   child: TabBarView(
                     children: [
-                      _RequestTab(call: call, maxBodyBytes: recorder.maxBodyBytes),
-                      _ResponseTab(call: call, maxBodyBytes: recorder.maxBodyBytes),
+                      _RequestTab(
+                        call: call,
+                        query: query,
+                        headers: _headers(call.requestHeaders),
+                        maxBodyBytes: widget.recorder.maxBodyBytes,
+                      ),
+                      _ResponseTab(
+                        call: call,
+                        headers: _headers(call.responseHeaders),
+                        maxBodyBytes: widget.recorder.maxBodyBytes,
+                      ),
                       if (hasError) _ErrorTab(call: call),
                     ],
                   ),
@@ -111,9 +159,10 @@ class NetworkCallDetailsPage extends StatelessWidget {
 }
 
 class _Summary extends StatelessWidget {
-  const _Summary({required this.call});
+  const _Summary({required this.call, required this.url});
 
   final NetworkCall call;
+  final String url;
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +195,7 @@ class _Summary extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 12),
-          SelectableText(call.uri.toString(), style: monoStyle.copyWith(fontSize: 13)),
+          SelectableText(url, style: monoStyle.copyWith(fontSize: 13)),
           const SizedBox(height: 8),
           Text(meta, style: theme.textTheme.bodySmall),
         ],
@@ -156,15 +205,15 @@ class _Summary extends StatelessWidget {
 }
 
 class _RequestTab extends StatelessWidget {
-  const _RequestTab({required this.call, required this.maxBodyBytes});
+  const _RequestTab({required this.call, required this.query, required this.headers, required this.maxBodyBytes});
 
   final NetworkCall call;
+  final Map<String, List<String>> query;
+  final Map<String, List<String>> headers;
   final int maxBodyBytes;
 
   @override
   Widget build(BuildContext context) {
-    final query = call.queryParameters;
-
     return _TabList(
       children: [
         if (query.isNotEmpty)
@@ -174,7 +223,7 @@ class _RequestTab extends StatelessWidget {
           ),
         _Block(
           label: 'Headers',
-          child: _KeyValueTable(entries: call.requestHeaders),
+          child: _KeyValueTable(entries: headers),
         ),
         _Block(
           label: 'Body',
@@ -186,9 +235,10 @@ class _RequestTab extends StatelessWidget {
 }
 
 class _ResponseTab extends StatelessWidget {
-  const _ResponseTab({required this.call, required this.maxBodyBytes});
+  const _ResponseTab({required this.call, required this.headers, required this.maxBodyBytes});
 
   final NetworkCall call;
+  final Map<String, List<String>> headers;
   final int maxBodyBytes;
 
   @override
@@ -211,7 +261,7 @@ class _ResponseTab extends StatelessWidget {
         ),
         _Block(
           label: 'Headers',
-          child: _KeyValueTable(entries: call.responseHeaders),
+          child: _KeyValueTable(entries: headers),
         ),
         _Block(
           label: 'Body',
@@ -340,7 +390,15 @@ class _KeyValueTable extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  Expanded(flex: 3, child: SelectableText(rows[index].$2, style: monoStyle)),
+                  Expanded(
+                    flex: 3,
+                    child: SelectableText(
+                      rows[index].$2,
+                      style: rows[index].$2 == redactedValue
+                          ? monoStyle.copyWith(color: DevtoolColors.textSecondary)
+                          : monoStyle,
+                    ),
+                  ),
                 ],
               ),
             ),
