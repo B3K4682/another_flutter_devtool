@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 /// Palette used across every devtool surface.
 abstract final class DevtoolColors {
