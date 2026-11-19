@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.6.0
+
+Moves to the standalone Material package, fixing the deprecation warnings reported by Flutter 3.47.
+
+### Breaking
+
+* The package now uses `package:material_ui/material_ui.dart` instead of the deprecated `package:flutter/material.dart`. `material_ui` has its own Material classes, so they don't mix with the ones from `flutter/material.dart`.
+* `DevtoolTheme.dark()` now returns `material_ui`'s `ThemeData`.
+* Custom tools should import `package:material_ui/material_ui.dart` so `Theme.of(context)` and other Material lookups pick up the devtool panel's theme.
+
+### Changed
+
+* Added `material_ui` as a dependency.
+* The README example and the example app use the new import.
+
 ## 0.5.5
 
 Masks sensitive network values on screen, not only in exports, so screenshots of the Network section are safe to share.

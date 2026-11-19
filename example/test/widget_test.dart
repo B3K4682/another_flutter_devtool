@@ -1,7 +1,7 @@
 import 'package:another_flutter_devtool/another_flutter_devtool.dart';
 import 'package:another_flutter_devtool_example/main.dart';
 import 'package:another_flutter_devtool_example/my_custom_tool.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

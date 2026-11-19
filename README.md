@@ -38,7 +38,7 @@ remembered across restarts.
 
 ```yaml
 dependencies:
-  another_flutter_devtool: ^0.5.5
+  another_flutter_devtool: ^0.6.0
 ```
 
 ## Usage
@@ -48,7 +48,7 @@ Wrap the widget you pass to `runApp`:
 ```dart
 import 'package:another_flutter_devtool/another_flutter_devtool.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:material_ui/material_ui.dart';
 
 void main() {
   // For tracking startup time. (optional)
